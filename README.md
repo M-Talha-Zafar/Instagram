@@ -33,7 +33,7 @@ Instagram is a social media platform that aims to provide a customizable and ext
    - Create a MongoDB database and update the database configuration in the backend's `.env` file.
      
 6. Start the development servers:
-   - Frontend: `cd client && npm start`
+   - Frontend: `cd client && npm run dev`
    - Backend: `cd server && npm run server`
    - Dev: `cd server && npm run dev`
      
