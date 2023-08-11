@@ -6,7 +6,12 @@ const ImageUpload = () => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setSelectedImage(file);
+    if (file && file.type.startsWith("image/")) {
+      setSelectedImage(file);
+    } else {
+      alert("Please select a valid image file.");
+      event.target.value = "";
+    }
   };
 
   const handleUpload = async () => {
