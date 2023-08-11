@@ -1,16 +1,24 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+require("./config/database");
 
 const app = express();
+const userRoutes = require("./routes/users");
+
+app.use(express.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello, Express!");
 });
 
-app.get("/about", (req, res) => {
-  res.send("This is the About page.");
-});
-
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
