@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const passport = require("./config/passport");
 require("./config/database");
 
 const app = express();
@@ -11,6 +12,8 @@ app.use(
     extended: true,
   })
 );
+
+app.use(passport.initialize());
 
 app.use("/users", userRoutes);
 
