@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import { styled } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import InstagramText from "../images/instagram-text.svg";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Link, useNavigate } from "react-router-dom";
+import { styled } from "@mui/system";
 
 const StyledIconButton = styled(IconButton)({
   marginBottom: "20px",

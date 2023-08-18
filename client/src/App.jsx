@@ -5,6 +5,7 @@ import Upload from "./pages/upload";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Home from "./pages/home";
+import EditProfile from "./pages/editProfile";
 import theme from "./utilities/theme";
 import { UserProvider } from "./contexts/UserContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -52,6 +53,14 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/user/edit"
+                  element={
+                    <ProtectedRoute>
+                      <EditProfile />
                     </ProtectedRoute>
                   }
                 />
