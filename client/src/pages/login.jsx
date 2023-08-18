@@ -41,7 +41,7 @@ const Login = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-evenly",
-        height: "100%",
+        minHeight: "100%",
       }}
     >
       <Box

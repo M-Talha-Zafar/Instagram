@@ -50,7 +50,7 @@ const Login = () => {
         flexDirection: "column",
         justifyContent: "space-evenly",
         alignItems: "center",
-        height: "100%",
+        minHeight: "100%",
       }}
     >
       <Box
@@ -58,10 +58,11 @@ const Login = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "60vh",
+          minHeight: "60vh",
+          width: "100%",
         }}
       >
-        <Box sx={{ width: "20vw" }}>
+        <Box sx={{ maxWidth: 400 }}>
           <Box
             display="flex"
             alignItems="center"
