@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const passport = require("passport");
 const UserController = require("../controllers/users");
 
 router.get("/", async (req, res) => {
@@ -10,59 +11,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/login", (req, res, next) => {
-  passport.authenticate("local", { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
+router.post("/login", UserController.login);
 
-    req.login(user, { session: false }, (err) => {
-      if (err) {
-        return next(err);
-      }
+router.post("/signup", UserController.signup);
 
-      const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
-
-      return res.json({ token });
-    });
-  })(req, res, next);
-});
-
-router.post("/signup", async (req, res, next) => {
-  const { fullname, username, email, password } = req.body;
-
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already registered." });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      fullname,
-      username,
-      email,
-      password: hashedPassword,
-    });
-
-    await newUser.save();
-
-    passport.authenticate("local", { session: false }, (err, user) => {
-      if (err || !user) {
-        return res
-          .status(400)
-          .json({ message: "Error logging in after signup." });
-      }
-
-      const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
-
-      return res.json({ token });
-    })(req, res, next);
-  } catch (error) {
-    return res.status(500).json({ message: "An error occurred." });
+router.get(
+  "/verify-token",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({ message: "Token is valid" });
   }
-});
+);
 
 router.get("/:id", async (req, res) => {
   const userId = req.params.id;

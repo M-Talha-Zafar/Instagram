@@ -1,4 +1,7 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 const UserController = {
   getAll: async () => {
@@ -40,6 +43,58 @@ const UserController = {
       return User.findByIdAndDelete(id);
     } catch (ex) {
       throw new Error("An error occurred while deleting the user");
+    }
+  },
+
+  login: async (req, res) => {
+    passport.authenticate(
+      "local",
+      { session: false },
+      async (err, user, info) => {
+        try {
+          if (err) {
+            return res.status(500).json({ message: "An error occurred." });
+          }
+
+          if (!user) {
+            return res.status(401).json({ message: "Invalid credentials." });
+          }
+
+          const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+          return res.json({ ...user._doc, token });
+        } catch (error) {
+          console.log(error);
+          return res.status(500).json({ message: "An error occurred." });
+        }
+      }
+    )(req, res);
+  },
+
+  signup: async (req, res) => {
+    const { fullname, username, email, password } = req.body;
+
+    try {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered." });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newUser = new User({
+        fullname,
+        username,
+        email,
+        password: hashedPassword,
+      });
+
+      await newUser.save();
+
+      const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
+      return res.json({ ...newUser._doc, token });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "An error occurred." });
     }
   },
 };

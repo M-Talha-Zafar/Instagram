@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { Box, Typography, TextField, Button, Link } from "@mui/material";
+import { useSnackbar } from "../contexts/SnackbarContext";
 import InstagramText from "../images/instagram-text.svg";
-import PublicFooter from "../components/publicFooter";
+import PublicFooter from "../components/PublicFooter";
+import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
 
 const Login = () => {
+  const { showSnackbar } = useSnackbar();
+  const { setUser } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
-    fullName: "",
+    fullname: "",
     username: "",
     password: "",
   });
@@ -21,15 +25,21 @@ const Login = () => {
   };
 
   const handleSignup = async () => {
-    console.log("Sending: ", formData);
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/signup",
+        `${import.meta.env.VITE_BACKEND_URL}/users/signup`,
         formData
       );
-      console.log(response.data);
+      const user = response.data;
+
+      localStorage.setItem("user-token", JSON.stringify(user.token));
+
+      setUser(user);
+
+      showSnackbar("Sign up successful");
     } catch (error) {
       console.error("Error signing up:", error);
+      showSnackbar("Error signing up: " + error.response.data.message, "error");
     }
   };
 
@@ -80,7 +90,7 @@ const Login = () => {
               label="Full name"
               variant="outlined"
               fullWidth
-              name="fullName"
+              name="fullname"
               value={formData.fullName}
               onChange={handleInputChange}
             />

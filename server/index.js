@@ -1,11 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("./config/passport");
+const cors = require("cors");
 require("./config/database");
 
 const app = express();
 const userRoutes = require("./routes/users");
 
+app.use(cors());
 app.use(express.json());
 app.use(
   bodyParser.urlencoded({

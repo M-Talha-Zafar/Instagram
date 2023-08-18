@@ -2,10 +2,15 @@ import { useState } from "react";
 import { Box, Typography, TextField, Button, Link } from "@mui/material";
 import HomeImage from "../images/instagram-home.png";
 import InstagramText from "../images/instagram-text.svg";
-import PublicFooter from "../components/publicFooter";
-import axios from "axios";
+import PublicFooter from "../components/PublicFooter";
+import { useAuth } from "../contexts/AuthContext";
+import { useSnackbar } from "../contexts/SnackbarContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { login } = useAuth();
+  const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     usernameOrEmail: "",
     password: "",
@@ -21,16 +26,15 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      // Make POST request to login
-      const response = await axios.post(
-        "http://localhost:3000/users/login",
-        formData
-      );
-      console.log(response.data); // Assuming the server sends back a response
-    } catch (error) {
-      console.error("Error logging in:", error);
+      await login(formData);
+      navigate("/");
+      showSnackbar("Login successful");
+    } catch (ex) {
+      console.error(ex);
+      showSnackbar("Error signing up: " + ex.response.data.message, "error");
     }
   };
+
   return (
     <Box
       sx={{
