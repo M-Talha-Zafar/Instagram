@@ -10,6 +10,7 @@ import { UserProvider } from "./contexts/UserContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <UserProvider>
           <AuthProvider>
             <BrowserRouter>
+              <CssBaseline />
               <Routes>
                 <Route
                   path="/"
