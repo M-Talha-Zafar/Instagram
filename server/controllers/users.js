@@ -97,6 +97,16 @@ const UserController = {
       return res.status(500).json({ message: "An error occurred." });
     }
   },
+
+  verify: (req, res) => {
+    passport.authenticate("jwt", { session: false }, (err, user) => {
+      if (err || !user) {
+        return res.status(401).json({ message: "Token is invalid" });
+      }
+
+      res.json({ message: "Token is valid", user });
+    })(req, res);
+  },
 };
 
 module.exports = UserController;

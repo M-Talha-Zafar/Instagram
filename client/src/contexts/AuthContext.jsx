@@ -50,7 +50,8 @@ export const AuthProvider = ({ children }) => {
             },
           }
         );
-        console.log("Token verified: ", response.data);
+        const user = response.data.user;
+        if (user) setUser(user);
         setIsAuthenticated(true);
       }
     } catch (error) {

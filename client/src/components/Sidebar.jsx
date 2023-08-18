@@ -6,7 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import InstagramText from "../images/instagram-text.svg";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledIconButton = styled(IconButton)({
   marginBottom: "20px",
@@ -18,13 +18,14 @@ const StyledIconButton = styled(IconButton)({
 });
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const isXsOrSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   return (
     <Box
       sx={{
         width: { xs: "100px", sm: "100px", md: "100%" },
-        maxWidth: 280,
+        maxWidth: 220,
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -60,7 +61,7 @@ const Sidebar = () => {
           width: "100%",
         }}
       >
-        <StyledIconButton>
+        <StyledIconButton onClick={() => navigate("/")}>
           <HomeIcon fontSize="large" />
           <Typography
             ml={2}
@@ -70,7 +71,7 @@ const Sidebar = () => {
             Home
           </Typography>
         </StyledIconButton>
-        <StyledIconButton>
+        <StyledIconButton onClick={() => navigate("/search")}>
           <SearchIcon fontSize="large" />
           <Typography
             ml={2}
@@ -80,7 +81,7 @@ const Sidebar = () => {
             Search
           </Typography>
         </StyledIconButton>
-        <StyledIconButton>
+        <StyledIconButton onClick={() => navigate("/user")}>
           <PersonIcon fontSize="large" />
           <Typography
             ml={2}

@@ -22,7 +22,7 @@ const Home = () => {
 
   return (
     <Box sx={{ height: "100%", display: "flex" }}>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Box>
         <Typography variant="h2">This is the home</Typography>
         <Button variant="filled" onClick={handleLogout}>

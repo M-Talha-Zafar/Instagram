@@ -11,6 +11,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import CssBaseline from "@mui/material/CssBaseline";
+import Profile from "./pages/profile";
 
 const App = () => {
   return (
@@ -46,7 +47,14 @@ const App = () => {
                   }
                 />
                 <Route path="/upload" element={<Upload />} />
-                {/* <Route path="/users/:userId" element={<UserProfile />} /> */}
+                <Route
+                  path="/user/"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
                 {/* <Route path="/posts/:postId" element={<PostDetail />} /> */}
               </Routes>
             </BrowserRouter>

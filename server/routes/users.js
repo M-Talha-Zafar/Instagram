@@ -15,13 +15,7 @@ router.post("/login", UserController.login);
 
 router.post("/signup", UserController.signup);
 
-router.get(
-  "/verify-token",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({ message: "Token is valid" });
-  }
-);
+router.get("/verify-token", UserController.verify);
 
 router.get("/:id", async (req, res) => {
   const userId = req.params.id;
