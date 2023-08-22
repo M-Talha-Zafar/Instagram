@@ -15,15 +15,15 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [commentText, setCommentText] = useState("");
 
+  const isOwner = user && post && user._id === post.user._id;
+
   const handleSendComment = async () => {
     if (commentText.trim() === "") {
       return;
     }
 
-    console.log("Sending:", post._id, commentText, user._id);
-
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/comments/${post._id}`,
         { text: commentText, userId: user._id }
       );
@@ -85,6 +85,7 @@ const Post = () => {
               post={post}
               key={post?._id}
               height={500}
+              isOwner={isOwner}
               displayComments
               displayAvatar
               displayCaption

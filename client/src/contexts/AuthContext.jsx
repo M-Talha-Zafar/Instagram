@@ -10,18 +10,14 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const login = async (formData) => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/users/login`,
-        formData
-      );
-      const user = response.data;
-      localStorage.setItem("user-token", JSON.stringify(user.token));
-      setUser(user);
-      await verifyToken();
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/users/login`,
+      formData
+    );
+    const user = response.data;
+    localStorage.setItem("user-token", JSON.stringify(user.token));
+    setUser(user);
+    await verifyToken();
   };
 
   const logout = () => {

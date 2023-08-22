@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Container,
@@ -71,7 +71,7 @@ const CreatePost = () => {
     };
 
     try {
-      const reponse = await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/posts`,
         postData
       );
