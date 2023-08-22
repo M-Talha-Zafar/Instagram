@@ -4,7 +4,6 @@ import DropdownMenu from "./DropdownMenu";
 import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
 import { useSnackbar } from "../contexts/SnackbarContext";
-import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
 
 const CommentCard = ({ comment, fetchPost }) => {
