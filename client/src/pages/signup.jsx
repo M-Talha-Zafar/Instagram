@@ -5,9 +5,11 @@ import InstagramText from "../images/instagram-text.svg";
 import PublicFooter from "../components/PublicFooter";
 import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const { setUser } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
@@ -37,6 +39,8 @@ const Login = () => {
       setUser(user);
 
       showSnackbar("Sign up successful");
+
+      navigate("/");
     } catch (error) {
       console.error("Error signing up:", error);
       showSnackbar("Error signing up: " + error.response.data.message, "error");

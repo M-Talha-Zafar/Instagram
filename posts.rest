@@ -1,0 +1,1 @@
+GET http://localhost:3000/posts/64e3faec8617b2e93e4dc187

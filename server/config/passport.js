@@ -18,9 +18,9 @@ passport.use(
         let user = null;
 
         if (isEmail) {
-          user = await User.findOne({ email: username });
+          user = await User.findOne({ email: username }).populate("posts");
         } else {
-          user = await User.findOne({ username: username });
+          user = await User.findOne({ username: username }).populate("posts");
         }
 
         if (!user) {
@@ -48,7 +48,7 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const user = await User.findById(payload.id);
+        const user = await User.findById(payload.id).populate("posts");
         if (user) {
           return done(null, user);
         } else {

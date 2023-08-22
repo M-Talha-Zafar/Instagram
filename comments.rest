@@ -1,0 +1,7 @@
+POST http://localhost:3000/comments/64e3faec8617b2e93e4dc187
+Content-Type: application/json
+
+{
+    "userId": "64dd8d9f239d36b1cb0f059c",
+    "text": "Looking good"
+}

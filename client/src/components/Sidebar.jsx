@@ -3,10 +3,14 @@ import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
+import AddIcon from "@mui/icons-material/Add";
+import LogoutIcon from "@mui/icons-material/Logout";
 import InstagramText from "../images/instagram-text.svg";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
+import { useSnackbar } from "../contexts/SnackbarContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const StyledIconButton = styled(IconButton)({
   marginBottom: "20px",
@@ -20,6 +24,20 @@ const StyledIconButton = styled(IconButton)({
 const Sidebar = () => {
   const navigate = useNavigate();
   const isXsOrSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+  const { showSnackbar } = useSnackbar();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+      showSnackbar("Logout successful");
+    } catch (ex) {
+      console.error(ex);
+      showSnackbar("Error signing up: " + ex.response.data.message, "error");
+    }
+  };
 
   return (
     <Box
@@ -81,7 +99,17 @@ const Sidebar = () => {
             Search
           </Typography>
         </StyledIconButton>
-        <StyledIconButton onClick={() => navigate("/user")}>
+        <StyledIconButton onClick={() => navigate("/create")}>
+          <AddIcon fontSize="large" />
+          <Typography
+            ml={2}
+            display={{ xs: "none", sm: "none", md: "block" }}
+            variant="subtitle1"
+          >
+            Create
+          </Typography>
+        </StyledIconButton>
+        <StyledIconButton onClick={() => navigate("/profile")}>
           <PersonIcon fontSize="large" />
           <Typography
             ml={2}
@@ -89,6 +117,16 @@ const Sidebar = () => {
             variant="subtitle1"
           >
             Profile
+          </Typography>
+        </StyledIconButton>
+        <StyledIconButton onClick={handleLogout}>
+          <LogoutIcon fontSize="large" />
+          <Typography
+            ml={2}
+            display={{ xs: "none", sm: "none", md: "block" }}
+            variant="subtitle1"
+          >
+            Logout
           </Typography>
         </StyledIconButton>
       </Box>

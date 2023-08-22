@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import PostCard from "../components/PostCard";
 
 const Profile = () => {
   const { user } = useUserContext();
@@ -55,7 +56,9 @@ const Profile = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={4}>
-                  <Typography variant="subtitle1">{0}</Typography>
+                  <Typography variant="subtitle1">
+                    {user.posts.length}
+                  </Typography>
                   <Typography variant="subtitle2">Posts</Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -78,15 +81,20 @@ const Profile = () => {
           </Grid>
         </Paper>
       </Box>
-      {/* <Box mt={3}>
+      <Box mt={3}>
         <Grid container spacing={2}>
-          {userProfile.posts.map((post, index) => (
+          {user.posts.map((post, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <img src={post} alt={`Post ${index}`} style={{ width: "100%" }} />
+              <Box
+                sx={{ cursor: "pointer" }}
+                onClick={() => navigate(`/post/${post._id}`)}
+              >
+                <PostCard post={post} key={index} height={300} />
+              </Box>
             </Grid>
           ))}
         </Grid>
-      </Box> */}
+      </Box>
     </Container>
   );
 };

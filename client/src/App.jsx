@@ -13,6 +13,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import CssBaseline from "@mui/material/CssBaseline";
 import Profile from "./pages/profile";
+import CreatePost from "./pages/createPost";
+import Post from "./pages/post";
+import Search from "./pages/search";
 
 const App = () => {
   return (
@@ -49,7 +52,7 @@ const App = () => {
                 />
                 <Route path="/upload" element={<Upload />} />
                 <Route
-                  path="/user/"
+                  path="/profile/"
                   element={
                     <ProtectedRoute>
                       <Profile />
@@ -64,7 +67,30 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                {/* <Route path="/posts/:postId" element={<PostDetail />} /> */}
+                <Route
+                  path="/create"
+                  element={
+                    <ProtectedRoute>
+                      <CreatePost />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/post/:id"
+                  element={
+                    <ProtectedRoute>
+                      <Post />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/search"
+                  element={
+                    <ProtectedRoute>
+                      <Search />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </BrowserRouter>
           </AuthProvider>

@@ -13,6 +13,7 @@ import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
+import { upload } from "../utilities/uploadImage";
 
 const EditProfile = () => {
   const { user, setUser } = useUserContext();
@@ -32,31 +33,6 @@ const EditProfile = () => {
     }
   };
 
-  const handleUpload = async () => {
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append("file", selectedImage);
-      formData.append("upload_preset", "instagram");
-
-      const cloudinaryUri = `https://api.cloudinary.com/v1_1/${
-        import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-      }/image/upload`;
-
-      try {
-        const response = await axios.post(cloudinaryUri, formData);
-
-        if (response.status === 200) {
-          const imageUrl = response.data.secure_url;
-          return imageUrl;
-        } else {
-          throw new Error("Image upload failed:", response.statusText);
-        }
-      } catch (error) {
-        throw error;
-      }
-    }
-  };
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setEditedUser((prevUser) => ({ ...prevUser, [name]: value }));
@@ -64,7 +40,7 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const profilePicture = await handleUpload();
+      const profilePicture = await upload(selectedImage);
       editedUser.profilePicture = profilePicture;
       const response = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`,
@@ -72,7 +48,7 @@ const EditProfile = () => {
       );
       setUser(response.data);
       showSnackbar("Changed have been saved");
-      navigate("/user");
+      navigate("/profile");
     } catch (error) {
       console.error(error);
       showSnackbar("Error updating profile: " + error);

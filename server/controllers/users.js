@@ -14,8 +14,9 @@ const UserController = {
 
   getById: async (id) => {
     try {
-      const user = await User.findById(id);
+      const user = await User.findById(id).populate("posts");
       if (!user) throw new Error();
+      console.log("User: ", user);
       return user;
     } catch (ex) {
       throw new Error("An error occurred while fetching the user");
