@@ -15,6 +15,16 @@ const DropdownMenu = ({ onDelete, onEdit }) => {
     setAnchorEl(null);
   };
 
+  const handleEdit = () => {
+    handleClose();
+    onEdit();
+  };
+
+  const handleDelete = () => {
+    handleClose();
+    onDelete();
+  };
+
   return (
     <Box>
       <IconButton
@@ -33,11 +43,11 @@ const DropdownMenu = ({ onDelete, onEdit }) => {
         onClose={handleClose}
       >
         <Box>
-          <MenuItem onClick={onEdit}>
+          <MenuItem onClick={handleEdit}>
             <EditIcon sx={{ marginRight: 1 }} />
             Edit
           </MenuItem>
-          <MenuItem onClick={onDelete}>
+          <MenuItem onClick={handleDelete}>
             <DeleteIcon sx={{ marginRight: 1 }} />
             Delete
           </MenuItem>

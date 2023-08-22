@@ -83,6 +83,7 @@ const Post = () => {
           <Box>
             <PostCard
               post={post}
+              fetchPost={fetchPost}
               key={post?._id}
               height={500}
               isOwner={isOwner}
