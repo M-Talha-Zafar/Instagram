@@ -2,7 +2,7 @@ const Comment = require("../models/comment");
 const Post = require("../models/post");
 
 const CommentController = {
-  getCommentById: async (commentId) => {
+  getById: async (commentId) => {
     try {
       return Comment.findById(commentId);
     } catch (error) {
@@ -31,7 +31,7 @@ const CommentController = {
     }
   },
 
-  updateCommentById: async (commentId, updatedData) => {
+  updateById: async (commentId, updatedData) => {
     try {
       return Comment.findByIdAndUpdate(commentId, updatedData, { new: true });
     } catch (error) {
@@ -39,7 +39,7 @@ const CommentController = {
     }
   },
 
-  deleteCommentById: async (commentId) => {
+  deleteById: async (commentId) => {
     try {
       return Comment.findByIdAndDelete(commentId);
     } catch (error) {
