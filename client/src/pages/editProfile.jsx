@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { upload } from "../utilities/uploadImage";
 
 const EditProfile = () => {
-  const { user, setUser } = useUserContext();
+  const { user, refreshUser } = useUserContext();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -42,11 +42,11 @@ const EditProfile = () => {
     try {
       const profilePicture = await upload(selectedImage);
       editedUser.profilePicture = profilePicture;
-      const response = await axios.put(
+      await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`,
         editedUser
       );
-      setUser(response.data);
+      refreshUser();
       showSnackbar("Changed have been saved");
       navigate("/profile");
     } catch (error) {

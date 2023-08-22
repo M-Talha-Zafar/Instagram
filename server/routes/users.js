@@ -16,6 +16,25 @@ router.post("/signup", UserController.signup);
 
 router.get("/verify-token", UserController.verify);
 
+router.get("/search", async (req, res) => {
+  console.log(req.query);
+  try {
+    const searchQuery = req.query.searchQuery;
+    console.log(searchQuery);
+    if (!searchQuery || searchQuery.trim() === "") {
+      return res.status(400).json({ error: "Invalid search term" });
+    }
+    const users = await UserController.searchUser(searchQuery);
+    res.send(users);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      error: "Failed to search for users",
+      errorMessage: error.message,
+    });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const userId = req.params.id;
   try {

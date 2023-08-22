@@ -16,7 +16,6 @@ const UserController = {
     try {
       const user = await User.findById(id).populate("posts");
       if (!user) throw new Error();
-      console.log("User: ", user);
       return user;
     } catch (ex) {
       throw new Error("An error occurred while fetching the user");
@@ -45,6 +44,12 @@ const UserController = {
     } catch (ex) {
       throw new Error("An error occurred while deleting the user");
     }
+  },
+
+  searchUser: async (searchTerm) => {
+    const regex = new RegExp(searchTerm, "i");
+    const searchResults = await User.find({ username: regex });
+    return searchResults;
   },
 
   login: async (req, res) => {

@@ -126,7 +126,7 @@ const Login = () => {
               }}
             >
               <Typography>
-                Don't have an account?
+                Don&apos;t have an account?
                 <Link
                   sx={{
                     marginLeft: "0.5rem",

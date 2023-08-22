@@ -48,7 +48,7 @@ const PostController = {
     }
   },
 
-  updatePostById: async (postId, updatedData) => {
+  updateById: async (postId, updatedData) => {
     try {
       return Post.findByIdAndUpdate(postId, updatedData, { new: true });
     } catch (error) {
@@ -56,9 +56,20 @@ const PostController = {
     }
   },
 
-  deletePostById: async (postId) => {
+  deleteById: async (postId) => {
     try {
-      return Post.findByIdAndDelete(postId);
+      const deletedPost = await Post.findByIdAndDelete(postId);
+      if (!deletedPost) {
+        throw new Error("Post not found");
+      }
+
+      await User.findByIdAndUpdate(
+        deletedPost.user,
+        { $pull: { posts: postId } },
+        { new: true }
+      );
+
+      return deletedPost;
     } catch (error) {
       throw new Error("An error occurred while deleting the post");
     }

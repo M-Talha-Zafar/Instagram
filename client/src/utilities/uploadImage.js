@@ -10,17 +10,13 @@ export const upload = async (image) => {
       import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
     }/image/upload`;
 
-    try {
-      const response = await axios.post(cloudinaryUri, formData);
+    const response = await axios.post(cloudinaryUri, formData);
 
-      if (response.status === 200) {
-        const imageUrl = response.data.secure_url;
-        return imageUrl;
-      } else {
-        throw new Error("Image upload failed:", response.statusText);
-      }
-    } catch (error) {
-      throw error;
+    if (response.status === 200) {
+      const imageUrl = response.data.secure_url;
+      return imageUrl;
+    } else {
+      throw new Error("Image upload failed:", response.statusText);
     }
   }
 };

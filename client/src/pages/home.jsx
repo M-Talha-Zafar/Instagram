@@ -1,6 +1,5 @@
-import { Box, Grid, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../contexts/SnackbarContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
@@ -27,7 +26,6 @@ const Home = () => {
   });
 
   const navigate = useNavigate();
-  const { showSnackbar } = useSnackbar();
   return (
     <Box
       sx={{

@@ -17,7 +17,7 @@ const ImageCarousel = ({
     if (currentIndex >= images.length) {
       setCurrentIndex(images.length - 1);
     }
-  }, [currentIndex, images]);
+  }, [currentIndex, images, setCurrentIndex]);
 
   return (
     <Carousel
