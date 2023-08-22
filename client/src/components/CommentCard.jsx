@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import DropdownMenu from "./DropdownMenu";
 import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
@@ -9,6 +9,7 @@ import ConfirmationModal from "./ConfirmationModal";
 
 const CommentCard = ({ comment, fetchPost }) => {
   const [editMode, setEditMode] = useState(false);
+  const [editedBody, setEditedBody] = useState(comment.text);
   const [open, setOpen] = useState(false);
   const { showSnackbar } = useSnackbar();
   const { user } = useUserContext();
@@ -27,6 +28,23 @@ const CommentCard = ({ comment, fetchPost }) => {
     }
   };
 
+  const handleEditComment = async () => {
+    console.log("Edited body: ", editedBody);
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`,
+        {
+          text: editedBody,
+        }
+      );
+      showSnackbar("Comment updated");
+      fetchPost();
+    } catch (err) {}
+
+    endEditMode();
+  };
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -36,7 +54,11 @@ const CommentCard = ({ comment, fetchPost }) => {
   };
 
   const startEditMode = () => {
-    console.log("Open");
+    setEditMode(true);
+  };
+
+  const endEditMode = () => {
+    setEditMode(false);
   };
 
   return (
@@ -54,12 +76,33 @@ const CommentCard = ({ comment, fetchPost }) => {
         entityTitle={"Comment"}
       />
       <Avatar src={comment.user.profilePicture} alt={comment.user.username} />
-      <Box sx={{ marginLeft: "1rem" }}>
-        <Typography variant="subtitle1">
-          <b>{comment.user.username}</b>
-        </Typography>
-        <Typography>{comment.text}</Typography>
-      </Box>
+      {editMode ? (
+        <Box sx={{ width: "100%" }} ml={2} mt={4}>
+          <TextField
+            variant="outlined"
+            fullWidth
+            value={editedBody}
+            onChange={(e) => setEditedBody(e.target.value)}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              textTransform: "none",
+            }}
+          >
+            <Button onClick={endEditMode}> Cancel </Button>
+            <Button onClick={handleEditComment}> Save </Button>
+          </Box>
+        </Box>
+      ) : (
+        <Box sx={{ marginLeft: "1rem" }}>
+          <Typography variant="subtitle1">
+            <b>{comment.user.username}</b>
+          </Typography>
+          <Typography>{comment.text}</Typography>
+        </Box>
+      )}
       <Box sx={{ marginLeft: "auto" }}>
         {isOwner && (
           <DropdownMenu onDelete={handleOpen} onEdit={startEditMode} />
