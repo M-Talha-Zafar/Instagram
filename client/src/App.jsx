@@ -51,14 +51,7 @@ const App = () => {
                   }
                 />
                 <Route path="/upload" element={<Upload />} />
-                <Route
-                  path="/profile/"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
+
                 <Route
                   path="/user/edit"
                   element={
@@ -88,6 +81,14 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Search />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/:username/"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
                     </ProtectedRoute>
                   }
                 />

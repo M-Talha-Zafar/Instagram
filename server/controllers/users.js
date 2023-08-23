@@ -22,6 +22,16 @@ const UserController = {
     }
   },
 
+  getByUsername: async (username) => {
+    try {
+      const user = await User.findOne({ username: username }).populate("posts");
+      if (!user) throw new Error();
+      return user;
+    } catch (ex) {
+      throw new Error("An error occurred while fetching the user");
+    }
+  },
+
   create: async (userData) => {
     try {
       return User.create(userData);

@@ -52,7 +52,6 @@ passport.use(
         if (user) {
           return done(null, user);
         } else {
-          console.log("Token is valid but user not found");
           return done(null, false, { message: "Unauthorized" });
         }
       } catch (error) {
