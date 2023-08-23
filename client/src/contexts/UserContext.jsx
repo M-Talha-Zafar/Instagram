@@ -13,7 +13,6 @@ export const UserProvider = ({ children }) => {
   const refreshUser = async () => {
     if (!user) return;
     try {
-      console.log(`${import.meta.env.VITE_BACKEND_URL}/users/${user?._id}`);
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/users/${user?._id}`
       );

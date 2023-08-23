@@ -49,8 +49,6 @@ const PostCard = ({
   };
 
   const handleEditPost = async () => {
-    console.log("Edited caption: ", editedCaption);
-
     try {
       await axios.put(`${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`, {
         caption: editedCaption,
@@ -103,7 +101,7 @@ const PostCard = ({
             <Avatar
               sx={{ cursor: "pointer" }}
               onClick={() => {
-                console.log("Redirect to user");
+                navigate(`/${post.user.username}`);
               }}
               src={post.user.profilePicture}
               alt={post.user.username}
@@ -111,7 +109,7 @@ const PostCard = ({
             <Typography
               sx={{ marginLeft: "1rem", cursor: "pointer" }}
               onClick={() => {
-                console.log("Redirect to user");
+                navigate(`/${post.user.username}`);
               }}
             >
               {post.user.username}

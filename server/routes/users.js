@@ -45,6 +45,16 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/by-username/:username", async (req, res) => {
+  const username = req.params.username;
+  try {
+    const user = await UserController.getByUsername(username);
+    res.send(user);
+  } catch (ex) {
+    res.status(500).send({ error: ex.message });
+  }
+});
+
 router.post("/", async (req, res) => {
   const userData = req.body;
   try {

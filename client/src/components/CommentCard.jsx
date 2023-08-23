@@ -28,8 +28,6 @@ const CommentCard = ({ comment, fetchPost }) => {
   };
 
   const handleEditComment = async () => {
-    console.log("Edited body: ", editedBody);
-
     try {
       await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`,

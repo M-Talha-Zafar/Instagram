@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useUserContext } from "../contexts/UserContext";
 
 const StyledIconButton = styled(IconButton)({
   marginBottom: "20px",
@@ -25,6 +26,7 @@ const Sidebar = () => {
   const isXsOrSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const { showSnackbar } = useSnackbar();
+  const { user } = useUserContext();
   const { logout } = useAuth();
 
   const handleLogout = async () => {
@@ -108,7 +110,7 @@ const Sidebar = () => {
             Create
           </Typography>
         </StyledIconButton>
-        <StyledIconButton onClick={() => navigate("/profile")}>
+        <StyledIconButton onClick={() => navigate(`/${user.username}`)}>
           <PersonIcon fontSize="large" />
           <Typography
             ml={2}

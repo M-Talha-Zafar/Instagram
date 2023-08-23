@@ -48,7 +48,7 @@ const EditProfile = () => {
       );
       refreshUser();
       showSnackbar("Changed have been saved");
-      navigate("/profile");
+      navigate(`/${user.username}`);
     } catch (error) {
       console.error(error);
       showSnackbar("Error updating profile: " + error);

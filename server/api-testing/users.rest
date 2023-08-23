@@ -1,1 +1,1 @@
-GET http://localhost:3000/users/search?searchQuery=emtea
+GET http://localhost:3000/users/by-username/emteazy
