@@ -103,11 +103,13 @@ const Profile = () => {
   };
 
   const handleShowFollowers = () => {
+    if (!isOwner && !accessible) return;
     setContext("followers");
     handleOpen();
   };
 
   const handleShowFollowing = () => {
+    if (!isOwner && !accessible) return;
     setContext("following");
     handleOpen();
   };
@@ -254,7 +256,7 @@ const Profile = () => {
             </Paper>
           </Box>
           {!isOwner && !accessible ? (
-            <Box sx={{ width: "100%", textAlign: "center", mt: 5 }}>
+            <Box sx={{ width: "100%", textAlign: "center", mt: 10 }}>
               <LockIcon sx={{ height: "5rem", width: "5rem" }} />
               <Typography mb={2} variant="h3">
                 This account is private
