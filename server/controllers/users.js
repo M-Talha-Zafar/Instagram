@@ -81,6 +81,13 @@ const UserController = {
     return user.following;
   },
 
+  getRequests: async (userId) => {
+    const user = await User.findById(userId).populate("requests");
+    if (!user) throw new Error("User not found");
+
+    return user.requests;
+  },
+
   sendFollowRequest: async (senderId, recipientId) => {
     const recipient = await User.findByIdAndUpdate(
       recipientId,
@@ -93,7 +100,7 @@ const UserController = {
 
   addFollower: async (senderId, recipientId) => {
     const sender = await User.findById(senderId);
-    const recipient = await User.findById(recipientId);
+    const recipient = await User.findById(recipientId).populate("posts");
 
     if (!sender || !recipient) {
       throw new Error("Sender or recipient not found");
@@ -109,7 +116,7 @@ const UserController = {
       await sender.save();
     }
 
-    return true;
+    return recipient;
   },
 
   acceptFollowRequest: async (userId, friendId) => {
@@ -132,19 +139,29 @@ const UserController = {
   },
 
   unfollowUser: async (userId, unfollowId) => {
-    const user = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       userId,
       { $pull: { following: unfollowId } },
       { new: true }
     );
 
-    await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       unfollowId,
       { $pull: { followers: userId } },
       { new: true }
-    );
+    ).populate("posts");
 
     return user;
+  },
+
+  deleteFollowRequest: async (userId, unfollowId) => {
+    const updatedUser = await User.findByIdAndUpdate(
+      unfollowId,
+      { $pull: { requests: userId } },
+      { new: true }
+    );
+
+    return updatedUser;
   },
 
   login: async (req, res) => {

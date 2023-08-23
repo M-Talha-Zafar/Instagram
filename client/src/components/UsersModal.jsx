@@ -1,4 +1,4 @@
-import { Box, Typography, Modal } from "@mui/material";
+import { Box, Typography, Modal, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import UsersList from "./UsersList";
@@ -17,6 +17,7 @@ const style = {
 
 const UsersModal = ({ open, onClose, context, user }) => {
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,13 +27,17 @@ const UsersModal = ({ open, onClose, context, user }) => {
         );
 
         setUsers(response.data);
-        console.log(`${context}: `, response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (context) fetchUsers();
+    if (context) {
+      setIsLoading(true);
+      fetchUsers();
+    }
   }, [open]);
 
   return (
@@ -48,7 +53,20 @@ const UsersModal = ({ open, onClose, context, user }) => {
             overflowX: "auto",
           }}
         >
-          <UsersList users={users} onClose={onClose} />
+          {isLoading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <UsersList users={users} onClose={onClose} />
+          )}
         </Box>
       </Box>
     </Modal>

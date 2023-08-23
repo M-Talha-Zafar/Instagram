@@ -7,16 +7,20 @@ import {
   Container,
   Button,
   CircularProgress,
+  Icon,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PostCard from "../components/PostCard";
 import UsersModal from "../components/UsersModal";
+import LockIcon from "@mui/icons-material/Lock";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 const Profile = () => {
   const { username } = useParams();
+  const { showSnackbar } = useSnackbar();
   const [user, setUser] = useState(null);
   const { user: currentUser } = useUserContext();
   const [context, setContext] = useState();
@@ -26,6 +30,7 @@ const Profile = () => {
 
   const isOwner = user && currentUser.username === username;
   const accessible = user && user.followers.includes(currentUser._id);
+  const requested = user && user.requests.includes(currentUser._id);
 
   const handleOpen = () => {
     setOpen(true);
@@ -56,27 +61,42 @@ const Profile = () => {
           `${import.meta.env.VITE_BACKEND_URL}/users/send-follow-request`,
           { senderId: currentUser._id, recipientId: user._id }
         );
+        showSnackbar("Follow request sent");
       } else {
         response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/users/add-follower`,
           { senderId: currentUser._id, recipientId: user._id }
         );
+        showSnackbar("Account followed");
       }
-
-      console.log("Follow request sent:", response.data);
+      setUser(response.data);
     } catch (error) {
       console.error("Error sending follow request:", error);
     }
   };
 
-  const handleSendUnfollowRequest = async () => {
+  const handleUnfollow = async () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/unfollow-user`,
         { userId: currentUser._id, unfollowId: user._id }
       );
+      showSnackbar("Account unfollowed");
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error sending follow request:", error);
+    }
+  };
 
-      console.log("Follow request sent:", response.data);
+  const handleDeleteRequest = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/users/delete-follow-request`,
+        { userId: currentUser._id, unfollowId: user._id }
+      );
+
+      showSnackbar("Follow request deleted");
+      setUser(response.data);
     } catch (error) {
       console.error("Error sending follow request:", error);
     }
@@ -93,6 +113,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchUser();
   }, [username]);
 
@@ -147,7 +168,29 @@ const Profile = () => {
                         >
                           Edit profile
                         </Button>
-                      ) : !accessible ? (
+                      ) : accessible ? (
+                        <Button
+                          variant="filled"
+                          onClick={handleUnfollow}
+                          sx={{
+                            ml: 2,
+                            textTransform: "none",
+                          }}
+                        >
+                          Following
+                        </Button>
+                      ) : requested ? (
+                        <Button
+                          variant="filled"
+                          onClick={handleDeleteRequest}
+                          sx={{
+                            ml: 2,
+                            textTransform: "none",
+                          }}
+                        >
+                          Requested
+                        </Button>
+                      ) : (
                         <Button
                           variant="filled"
                           onClick={handleSendFollowRequest}
@@ -157,17 +200,6 @@ const Profile = () => {
                           }}
                         >
                           Follow
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="filled"
-                          onClick={handleSendUnfollowRequest}
-                          sx={{
-                            ml: 2,
-                            textTransform: "none",
-                          }}
-                        >
-                          Following
                         </Button>
                       )}
                     </Box>
@@ -221,8 +253,9 @@ const Profile = () => {
               </Grid>
             </Paper>
           </Box>
-          {!isOwner && user.isPrivate ? (
+          {!isOwner && !accessible ? (
             <Box sx={{ width: "100%", textAlign: "center", mt: 5 }}>
+              <LockIcon sx={{ height: "5rem", width: "5rem" }} />
               <Typography mb={2} variant="h3">
                 This account is private
               </Typography>
@@ -233,7 +266,7 @@ const Profile = () => {
           ) : (
             <Box mt={3}>
               <Grid container spacing={2}>
-                {user.posts.map((post, index) => (
+                {user.posts?.map((post, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <Box
                       sx={{ cursor: "pointer" }}
