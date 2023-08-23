@@ -4,7 +4,10 @@ const User = require("../models/user");
 const PostController = {
   getAll: async () => {
     try {
-      return Post.find().populate("user").populate("comments");
+      return Post.find()
+        .sort({ createdAt: -1 })
+        .populate("user")
+        .populate("comments");
     } catch (error) {
       throw new Error("An error occurred while fetching posts");
     }

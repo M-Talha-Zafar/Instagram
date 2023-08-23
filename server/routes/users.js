@@ -16,11 +16,69 @@ router.post("/signup", UserController.signup);
 
 router.get("/verify-token", UserController.verify);
 
+router.get("/followers/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const users = await UserController.getFollowers(userId);
+    res.send(users);
+  } catch (ex) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
+router.get("/following/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const users = await UserController.getFollowing(userId);
+    res.send(users);
+  } catch (ex) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
+router.post("/send-follow-request", async (req, res) => {
+  const { senderId, recipientId } = req.body;
+  try {
+    const user = await UserController.sendFollowRequest(senderId, recipientId);
+    res.send(user);
+  } catch (ex) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
+router.post("/add-follower", async (req, res) => {
+  const { senderId, recipientId } = req.body;
+  try {
+    const user = await UserController.addFollower(senderId, recipientId);
+    res.send(user);
+  } catch (ex) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
+router.post("/accept-follow-request", async (req, res) => {
+  const { userId, friendId } = req.body;
+  try {
+    const user = await UserController.acceptFollowRequest(userId, friendId);
+    res.send(user);
+  } catch (ex) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
+router.post("/unfollow-user", async (req, res) => {
+  const { userId, unfollowId } = req.body;
+  try {
+    const user = await UserController.unfollowUser(userId, unfollowId);
+    res.send(user);
+  } catch (ex) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
 router.get("/search", async (req, res) => {
-  console.log(req.query);
   try {
     const searchQuery = req.query.searchQuery;
-    console.log(searchQuery);
     if (!searchQuery || searchQuery.trim() === "") {
       return res.status(400).json({ error: "Invalid search term" });
     }

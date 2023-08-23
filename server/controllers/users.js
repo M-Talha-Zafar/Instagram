@@ -62,6 +62,91 @@ const UserController = {
     return searchResults;
   },
 
+  getFollowers: async (userId) => {
+    const user = await User.findById(userId).populate(
+      "followers",
+      "username profilePicture"
+    );
+    if (!user) throw new Error("User not found");
+    return user.followers;
+  },
+
+  getFollowing: async (userId) => {
+    const user = await User.findById(userId).populate(
+      "following",
+      "username profilePicture"
+    );
+    if (!user) throw new Error("User not found");
+
+    return user.following;
+  },
+
+  sendFollowRequest: async (senderId, recipientId) => {
+    const recipient = await User.findByIdAndUpdate(
+      recipientId,
+      { $addToSet: { requests: senderId } },
+      { new: true }
+    );
+
+    return recipient;
+  },
+
+  addFollower: async (senderId, recipientId) => {
+    const sender = await User.findById(senderId);
+    const recipient = await User.findById(recipientId);
+
+    if (!sender || !recipient) {
+      throw new Error("Sender or recipient not found");
+    }
+
+    if (!recipient.followers.includes(senderId)) {
+      recipient.followers.push(senderId);
+      await recipient.save();
+    }
+
+    if (!sender.following.includes(recipientId)) {
+      sender.following.push(recipientId);
+      await sender.save();
+    }
+
+    return true;
+  },
+
+  acceptFollowRequest: async (userId, friendId) => {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { requests: friendId },
+        $addToSet: { followers: friendId },
+      },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      friendId,
+      { $addToSet: { following: userId } },
+      { new: true }
+    );
+
+    return user;
+  },
+
+  unfollowUser: async (userId, unfollowId) => {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { following: unfollowId } },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      unfollowId,
+      { $pull: { followers: userId } },
+      { new: true }
+    );
+
+    return user;
+  },
+
   login: async (req, res) => {
     passport.authenticate(
       "local",

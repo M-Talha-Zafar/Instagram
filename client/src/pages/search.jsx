@@ -16,6 +16,7 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UsersList from "../components/UsersList";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,27 +86,7 @@ const Search = () => {
             No results
           </Typography>
         ) : (
-          <List>
-            {users.map((user) => (
-              <ListItem
-                key={user._id}
-                onClick={() => {
-                  navigate(`/profile/${user._id}`);
-                }}
-                sx={{
-                  backgroundColor: "#F2F2F2",
-                  borderRadius: "10px",
-                  mb: 3,
-                  cursor: "pointer",
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar src={user.profilePicture} />
-                </ListItemAvatar>
-                <ListItemText primary={user.username} />
-              </ListItem>
-            ))}
-          </List>
+          <UsersList users={users} />
         )}
       </Box>
     </Container>
