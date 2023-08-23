@@ -33,7 +33,7 @@ const UsersModal = ({ open, onClose, context, user }) => {
     };
 
     if (context) fetchUsers();
-  }, [context]);
+  }, [open]);
 
   return (
     <Modal open={open} onClose={onClose}>
