@@ -122,7 +122,7 @@ const PostCard = ({
       )}
 
       <Carousel autoPlay={false} sx={{ mt: 3, mb: 3, overflow: "visible" }}>
-        {post.images.map((image, index) => (
+        {post.images?.map((image, index) => (
           <Card key={index}>
             <CardMedia
               component="img"

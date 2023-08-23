@@ -16,6 +16,7 @@ import Profile from "./pages/profile";
 import CreatePost from "./pages/createPost";
 import Post from "./pages/post";
 import Search from "./pages/search";
+import Requests from "./pages/requests";
 
 const App = () => {
   return (
@@ -81,6 +82,14 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Search />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/requests"
+                  element={
+                    <ProtectedRoute>
+                      <Requests />
                     </ProtectedRoute>
                   }
                 />

@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import InstagramText from "../images/instagram-text.svg";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Link, useNavigate } from "react-router-dom";
@@ -118,6 +119,16 @@ const Sidebar = () => {
             variant="subtitle1"
           >
             Profile
+          </Typography>
+        </StyledIconButton>
+        <StyledIconButton onClick={() => navigate("/requests")}>
+          <FavoriteBorderIcon fontSize="large" />
+          <Typography
+            ml={2}
+            display={{ xs: "none", sm: "none", md: "block" }}
+            variant="subtitle1"
+          >
+            Requests
           </Typography>
         </StyledIconButton>
         <StyledIconButton onClick={handleLogout}>
