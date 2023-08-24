@@ -9,8 +9,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import PostCard from "../components/PostCard";
-import UsersModal from "../components/UsersModal";
+import PostCard from "../components/posts/PostCard";
+import UsersModal from "../components/users/UsersModal";
 import LockIcon from "@mui/icons-material/Lock";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";

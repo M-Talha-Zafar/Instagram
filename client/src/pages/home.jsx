@@ -2,9 +2,9 @@ import { Box, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import PostCard from "../components/PostCard";
+import PostCard from "../components/posts/PostCard";
 import { useUserContext } from "../contexts/UserContext";
-import StoriesBar from "../components/StoriesBar";
+import StoriesBar from "../components/stories/StoriesBar";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);

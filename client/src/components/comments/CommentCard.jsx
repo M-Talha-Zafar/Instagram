@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
-import DropdownMenu from "./DropdownMenu";
-import { useUserContext } from "../contexts/UserContext";
+import DropdownMenu from "../utilities/DropdownMenu";
+import { useUserContext } from "../../contexts/UserContext";
 import axios from "axios";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import ConfirmationModal from "./ConfirmationModal";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import ConfirmationModal from "../utilities/ConfirmationModal";
 
 const CommentCard = ({ comment, fetchPost }) => {
   const [editMode, setEditMode] = useState(false);

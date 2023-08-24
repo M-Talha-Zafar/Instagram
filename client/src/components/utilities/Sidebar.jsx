@@ -9,9 +9,9 @@ import InstagramText from "../images/instagram-text.svg";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import { useAuth } from "../contexts/AuthContext";
-import { useUserContext } from "../contexts/UserContext";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { useUserContext } from "../../contexts/UserContext";
 
 const StyledIconButton = styled(IconButton)({
   marginBottom: "20px",

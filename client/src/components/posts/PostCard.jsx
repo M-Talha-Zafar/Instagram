@@ -10,14 +10,14 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import DropdownMenu from "./DropdownMenu";
+import DropdownMenu from "../utilities/DropdownMenu";
 import { useState } from "react";
-import ConfirmationModal from "./ConfirmationModal";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import { useUserContext } from "../contexts/UserContext";
+import ConfirmationModal from "../utilities/ConfirmationModal";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import { useUserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CommentCard from "./CommentCard";
+import CommentCard from "../comments/CommentCard";
 
 const PostCard = ({
   post,

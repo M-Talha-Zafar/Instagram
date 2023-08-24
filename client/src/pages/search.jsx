@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
-import UsersList from "../components/UsersList";
+import UsersList from "../components/users/UsersList";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");

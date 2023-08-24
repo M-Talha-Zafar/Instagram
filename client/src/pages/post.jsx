@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { TextField, IconButton, Box, CircularProgress } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useUserContext } from "../contexts/UserContext";
-import PostCard from "../components/PostCard";
+import PostCard from "../components/posts/PostCard";
 import axios from "axios";
 import { useSnackbar } from "../contexts/SnackbarContext";
 
