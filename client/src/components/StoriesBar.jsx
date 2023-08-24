@@ -28,26 +28,27 @@ const StoriesBar = ({ user: currentUser }) => {
 
   const handleCloseCreateModal = () => {
     setOpenCreateModal(false);
+    fetchStoryUsers();
+  };
+
+  const fetchStoryUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/users/stories/${currentUser._id}`
+      );
+
+      setUsers([currentUser, ...response.data]);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchStoryUsers = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/stories/${currentUser._id}`
-        );
-
-        setUsers([currentUser, ...response.data]);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchStoryUsers();
-  }, [openCreateModal]);
+  }, []);
 
   const handleStoryClick = (user) => {
     setStoryUser(user);

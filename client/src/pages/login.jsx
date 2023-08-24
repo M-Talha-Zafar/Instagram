@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Box, Typography, TextField, Button, Link } from "@mui/material";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import HomeImage from "../images/instagram-home.png";
 import InstagramText from "../images/instagram-text.svg";
 import PublicFooter from "../components/PublicFooter";
@@ -7,26 +9,25 @@ import { useAuth } from "../contexts/AuthContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 
+const validationSchema = Yup.object().shape({
+  usernameOrEmail: Yup.string().required("Username or Email is required"),
+  password: Yup.string().required("Password is required"),
+});
+
+const errorStyles = {
+  fontSize: "12px",
+  color: "red",
+  marginBottom: "0.5rem",
+};
+
 const Login = () => {
   const { login } = useAuth();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    usernameOrEmail: "",
-    password: "",
-  });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleLogin = async () => {
+  const handleLogin = async (values) => {
     try {
-      await login(formData);
+      await login(values);
       navigate("/");
       showSnackbar("Login successful");
     } catch (ex) {
@@ -80,31 +81,54 @@ const Login = () => {
               }}
             >
               <img src={InstagramText} alt="" style={{ width: "150px" }} />
-              <TextField
-                label="Username or Email"
-                variant="outlined"
-                fullWidth
-                name="usernameOrEmail"
-                value={formData.usernameOrEmail}
-                onChange={handleInputChange}
-              />
-              <TextField
-                type="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleLogin}
-              >
-                Login
-              </Button>
+              <Box sx={{ width: "20vw" }}>
+                <Formik
+                  initialValues={{
+                    usernameOrEmail: "",
+                    password: "",
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={handleLogin}
+                >
+                  <Form>
+                    <ErrorMessage
+                      name="usernameOrEmail"
+                      style={errorStyles}
+                      component="div"
+                    />
+                    <Field
+                      as={TextField}
+                      label="Username or Email"
+                      variant="outlined"
+                      fullWidth
+                      name="usernameOrEmail"
+                      sx={{ marginBottom: "2rem" }}
+                    />
+                    <ErrorMessage
+                      name="password"
+                      style={errorStyles}
+                      component="div"
+                    />
+                    <Field
+                      as={TextField}
+                      type="password"
+                      label="Password"
+                      variant="outlined"
+                      fullWidth
+                      name="password"
+                      sx={{ marginBottom: "2rem" }}
+                    />
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                    >
+                      Login
+                    </Button>
+                  </Form>
+                </Formik>
+              </Box>
               <Typography>
                 <Link
                   sx={{

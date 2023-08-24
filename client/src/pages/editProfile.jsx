@@ -61,6 +61,16 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
+      // const existingUsername = await axios.get(
+      //   `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`
+      // );
+      // console.log(existingUsername);
+
+      // if (existingUsername) {
+      //   showSnackbar("Username is already taken", )
+      //   return;
+      // }
+
       const profilePicture = await upload(selectedImage);
       editedUser.profilePicture = profilePicture;
       await axios.put(
@@ -71,8 +81,13 @@ const EditProfile = () => {
       showSnackbar("Changed have been saved");
       navigate(`/${user.username}`);
     } catch (error) {
-      console.error(error);
-      showSnackbar("Error updating profile: " + error);
+      console.error(error.response.data.error);
+      showSnackbar(
+        "Error updating profile: " +
+          error.response.data.error.includes("E11000")
+          ? "Username is already taken"
+          : error
+      );
     }
   };
 

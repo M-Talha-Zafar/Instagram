@@ -53,6 +53,15 @@ const CreatePost = () => {
   };
 
   const handleSubmit = async () => {
+    if (images.length === 0) {
+      showSnackbar("Please upload at least one image", "error");
+      return;
+    }
+    if (images.length > 10) {
+      showSnackbar("You can only upload 10 images in one post", "error");
+      return;
+    }
+
     const imageLinks = [];
 
     for (const image of images) {
@@ -87,13 +96,13 @@ const CreatePost = () => {
   return (
     <Container maxWidth="md">
       <Paper elevation={3}>
-        <Box p={4}>
+        <Box sx={{ display: "flex", flexDirection: "column" }} p={4}>
           <Typography variant="h4">Create a Post</Typography>
           <Box display="flex" mt={4}>
             <Button
               variant="outlined"
               component="label"
-              sx={{ textTransform: "none" }}
+              sx={{ textTransform: "none", marginLeft: "auto" }}
             >
               Add image
               <input
@@ -105,12 +114,14 @@ const CreatePost = () => {
               />
             </Button>
           </Box>
-          <ImageCarousel
-            images={imageURLs}
-            removeImage={handleRemoveImage}
-            currentIndex={currentIndex}
-            setCurrentIndex={setCurrentIndex}
-          />
+          {images.length > 0 && (
+            <ImageCarousel
+              images={imageURLs}
+              removeImage={handleRemoveImage}
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+            />
+          )}
           <TextField
             sx={{ mt: 3, mb: 3 }}
             label="Caption"
@@ -120,9 +131,11 @@ const CreatePost = () => {
             onChange={(e) => setCaption(e.target.value)}
             fullWidth
           />
-          <Button variant="contained" onClick={handleSubmit}>
-            Create Post
-          </Button>
+          <Box ml="auto">
+            <Button variant="contained" onClick={handleSubmit}>
+              Create Post
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>
