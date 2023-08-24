@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import { SnackbarProvider } from "./contexts/SnackbarContext";
-import Upload from "./pages/upload";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Home from "./pages/home";
@@ -51,8 +50,6 @@ const App = () => {
                     </PublicRoute>
                   }
                 />
-                <Route path="/upload" element={<Upload />} />
-
                 <Route
                   path="/user/edit"
                   element={
