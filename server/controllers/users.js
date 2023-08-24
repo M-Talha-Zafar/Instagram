@@ -22,6 +22,15 @@ const UserController = {
     }
   },
 
+  getStoryPictures: async (userId) => {
+    const users = await User.findById(userId).populate(
+      "following",
+      "username profilePicture stories"
+    );
+
+    return users.following;
+  },
+
   getByUsername: async (username) => {
     try {
       const user = await User.findOne({ username: username }).populate("posts");
@@ -165,36 +174,38 @@ const UserController = {
   },
 
   login: async (req, res) => {
-    passport.authenticate(
-      "local",
-      { session: false },
-      async (err, user, info) => {
-        try {
-          if (err) {
-            return res.status(500).json({ message: "An error occurred." });
-          }
-
-          if (!user) {
-            return res.status(401).json({ message: "Invalid credentials." });
-          }
-
-          const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
-          return res.json({ ...user._doc, token });
-        } catch (error) {
-          console.log(error);
+    passport.authenticate("local", { session: false }, async (err, user) => {
+      try {
+        if (err) {
           return res.status(500).json({ message: "An error occurred." });
         }
+
+        if (!user) {
+          return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+        return res.json({ ...user._doc, token });
+      } catch (error) {
+        return res.status(500).json({ message: "An error occurred." });
       }
-    )(req, res);
+    })(req, res);
   },
 
   signup: async (req, res) => {
     const { fullname, username, email, password } = req.body;
 
     try {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
         return res.status(400).json({ message: "Email already registered." });
+      }
+
+      const existingUsername = await User.findOne({ username });
+      if (existingUsername) {
+        return res
+          .status(400)
+          .json({ message: "Username already registered." });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);

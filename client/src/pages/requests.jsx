@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import { useUserContext } from "../contexts/UserContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -42,14 +43,14 @@ const Requests = () => {
     fetchRequests();
   }, []);
 
-  const handleAcceptRequest = async (userId) => {
-    const friendId = user._id;
+  const handleAcceptRequest = async (friendId) => {
+    const userId = user._id;
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/accept-follow-request`,
         { userId, friendId }
       );
-      const updatedRequests = requests.filter((user) => user._id !== userId);
+      const updatedRequests = requests.filter((user) => user._id !== friendId);
       setRequests(updatedRequests);
       showSnackbar("Follow request accepted.");
     } catch (error) {
@@ -61,7 +62,7 @@ const Requests = () => {
   const handleRemoveRequest = async (userId) => {
     const unfollowId = user._id;
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/delete-follow-request`,
         { userId, unfollowId }
       );
@@ -136,9 +137,14 @@ const Requests = () => {
         </Box>
       ) : (
         <Box textAlign="center" mt={5}>
-          <Typography variant="h3">You have no pending requests</Typography>
+          <DisabledByDefaultIcon
+            sx={{ height: "5rem", width: "5rem", mb: 2 }}
+          />
+          <Typography variant="h3" mb={2}>
+            You have no pending requests
+          </Typography>
           <Typography variant="subtitle1">
-            Once someone requests to follow you, it'll show up here.
+            Once someone requests to follow you, it&apos;ll show up here.
           </Typography>
         </Box>
       )}

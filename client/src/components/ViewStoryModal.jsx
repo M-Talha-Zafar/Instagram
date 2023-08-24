@@ -1,7 +1,7 @@
-import { Box, Typography, Modal, CircularProgress } from "@mui/material";
+import { Box, Modal, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import UsersList from "./UsersList";
+import ImageCarousel from "./ImageCarousel";
 
 const style = {
   position: "absolute",
@@ -9,24 +9,25 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  backgroundColor: "white",
+  backgroundColor: "black",
   borderRadius: "1rem",
-  boxShadow: 24,
-  p: 4,
 };
 
-const UsersModal = ({ open, onClose, context, user }) => {
-  const [users, setUsers] = useState([]);
+const ViewStoryModal = ({ open, onClose, user }) => {
+  const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchStories = async () => {
+      setIsLoading(true);
+
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/${context}/${user._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/stories/user/${user._id}`
         );
 
-        setUsers(response.data);
+        setImages(response.data.map((story) => story.image));
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
@@ -34,38 +35,30 @@ const UsersModal = ({ open, onClose, context, user }) => {
       }
     };
 
-    if (context) {
-      setIsLoading(true);
-      fetchUsers();
-    }
+    if (user._id) fetchStories();
   }, [open]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>
-        <Typography variant="h4" align="center">
-          {context && context.charAt(0).toUpperCase() + context.slice(1)}
-        </Typography>
-        <Box
-          sx={{
-            mt: 5,
-            height: "30vh",
-            overflowX: "auto",
-          }}
-        >
+        <Box>
           {isLoading ? (
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100%",
+                height: "40vh",
               }}
             >
               <CircularProgress />
             </Box>
           ) : (
-            <UsersList users={users} onClose={onClose} />
+            <ImageCarousel
+              images={images}
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+            />
           )}
         </Box>
       </Box>
@@ -73,4 +66,4 @@ const UsersModal = ({ open, onClose, context, user }) => {
   );
 };
 
-export default UsersModal;
+export default ViewStoryModal;

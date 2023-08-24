@@ -7,7 +7,6 @@ import {
   Container,
   Button,
   CircularProgress,
-  Icon,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PostCard from "../components/PostCard";
@@ -103,13 +102,13 @@ const Profile = () => {
   };
 
   const handleShowFollowers = () => {
-    if (!isOwner && !accessible) return;
+    if (!isOwner && !accessible && user.isPrivate) return;
     setContext("followers");
     handleOpen();
   };
 
   const handleShowFollowing = () => {
-    if (!isOwner && !accessible) return;
+    if (!isOwner && !accessible && user.isPrivate) return;
     setContext("following");
     handleOpen();
   };
@@ -255,7 +254,7 @@ const Profile = () => {
               </Grid>
             </Paper>
           </Box>
-          {!isOwner && !accessible ? (
+          {!isOwner && user.isPrivate && !accessible ? (
             <Box sx={{ width: "100%", textAlign: "center", mt: 10 }}>
               <LockIcon sx={{ height: "5rem", width: "5rem" }} />
               <Typography mb={2} variant="h3">
@@ -285,7 +284,7 @@ const Profile = () => {
       ) : (
         <Box sx={{ width: "100%", textAlign: "center", mt: 5 }}>
           <Typography mb={2} variant="h3">
-            Sorry, this page isn't available
+            Sorry, this page isn&apos;t available
           </Typography>
           <Typography variant="subtitle1">
             The link you followed may be broken, or the page may have been

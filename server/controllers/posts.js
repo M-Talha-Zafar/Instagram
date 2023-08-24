@@ -1,5 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
+const mongoose = require("mongoose");
 
 const PostController = {
   getAll: async () => {
@@ -8,6 +9,40 @@ const PostController = {
         .sort({ createdAt: -1 })
         .populate("user")
         .populate("comments");
+    } catch (error) {
+      throw new Error("An error occurred while fetching posts");
+    }
+  },
+
+  getPostsForUser: async (userId) => {
+    try {
+      const posts = await Post.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $match: {
+            $or: [
+              { "user.isPrivate": false },
+              { "user.followers": new mongoose.Types.ObjectId(userId) },
+              { "user._id": new mongoose.Types.ObjectId(userId) },
+            ],
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+      ]);
+
+      return posts;
     } catch (error) {
       throw new Error("An error occurred while fetching posts");
     }

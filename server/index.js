@@ -8,6 +8,7 @@ const app = express();
 const userRoutes = require("./routes/users");
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
+const storyRoutes = require("./routes/stories");
 
 app.use(cors());
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use(passport.initialize());
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
+app.use("/stories", storyRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello, Express!");

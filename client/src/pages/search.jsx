@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -7,21 +7,14 @@ import {
   Paper,
   InputAdornment,
   IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import UsersList from "../components/UsersList";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
-  const navigate = useNavigate();
 
   const handleClearSearch = () => {
     setSearchQuery("");

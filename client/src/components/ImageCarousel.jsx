@@ -34,17 +34,19 @@ const ImageCarousel = ({
             image={image}
             alt={`Image ${index}`}
           />
-          <Box
-            sx={{
-              position: "absolute",
-              top: "-25px",
-              right: "-25px",
-            }}
-          >
-            <IconButton onClick={() => removeImage(index)}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+          {removeImage && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-25px",
+                right: "-25px",
+              }}
+            >
+              <IconButton onClick={() => removeImage(index)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          )}
         </Card>
       ))}
     </Carousel>
