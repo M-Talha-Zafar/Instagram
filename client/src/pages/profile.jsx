@@ -284,7 +284,7 @@ const Profile = () => {
       ) : (
         <Box sx={{ width: "100%", textAlign: "center", mt: 5 }}>
           <Typography mb={2} variant="h3">
-            Sorry, this page isn't available
+            Sorry, this page isn&apos;t available
           </Typography>
           <Typography variant="subtitle1">
             The link you followed may be broken, or the page may have been

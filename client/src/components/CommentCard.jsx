@@ -37,7 +37,9 @@ const CommentCard = ({ comment, fetchPost }) => {
       );
       showSnackbar("Comment updated");
       fetchPost();
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
 
     endEditMode();
   };

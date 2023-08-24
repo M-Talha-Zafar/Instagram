@@ -37,7 +37,7 @@ const PostCard = ({
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`
       );
       showSnackbar("Post deleted");
@@ -55,7 +55,9 @@ const PostCard = ({
       });
       showSnackbar("Post updated");
       fetchPost();
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
 
     endEditMode();
   };

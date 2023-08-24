@@ -144,7 +144,7 @@ const Requests = () => {
             You have no pending requests
           </Typography>
           <Typography variant="subtitle1">
-            Once someone requests to follow you, it'll show up here.
+            Once someone requests to follow you, it&apos;ll show up here.
           </Typography>
         </Box>
       )}

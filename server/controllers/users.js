@@ -174,26 +174,22 @@ const UserController = {
   },
 
   login: async (req, res) => {
-    passport.authenticate(
-      "local",
-      { session: false },
-      async (err, user, info) => {
-        try {
-          if (err) {
-            return res.status(500).json({ message: "An error occurred." });
-          }
-
-          if (!user) {
-            return res.status(401).json({ message: "Invalid credentials." });
-          }
-
-          const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
-          return res.json({ ...user._doc, token });
-        } catch (error) {
+    passport.authenticate("local", { session: false }, async (err, user) => {
+      try {
+        if (err) {
           return res.status(500).json({ message: "An error occurred." });
         }
+
+        if (!user) {
+          return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+        return res.json({ ...user._doc, token });
+      } catch (error) {
+        return res.status(500).json({ message: "An error occurred." });
       }
-    )(req, res);
+    })(req, res);
   },
 
   signup: async (req, res) => {

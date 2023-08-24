@@ -1,8 +1,7 @@
-import { Box, Typography, Modal, CircularProgress } from "@mui/material";
+import { Box, Modal, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ImageCarousel from "./ImageCarousel";
-import { useUserContext } from "../contexts/UserContext";
 
 const style = {
   position: "absolute",
@@ -15,12 +14,9 @@ const style = {
 };
 
 const ViewStoryModal = ({ open, onClose, user }) => {
-  const { user: currentUser } = useUserContext();
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const isOwner = user && user._id === currentUser._id;
 
   useEffect(() => {
     const fetchStories = async () => {

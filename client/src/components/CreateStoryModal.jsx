@@ -4,7 +4,6 @@ import { useState } from "react";
 import { upload } from "../utilities/uploadImage";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import SendIcon from "@mui/icons-material/Send";
-import { useUserContext } from "../contexts/UserContext";
 
 const style = {
   position: "absolute",
@@ -46,7 +45,7 @@ const CreateStoryModal = ({ open, onClose, user }) => {
     };
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/stories`,
         storyData
       );

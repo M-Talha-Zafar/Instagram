@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Box, Typography, TextField, Button, Link } from "@mui/material";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import InstagramText from "../images/instagram-text.svg";
@@ -30,20 +29,6 @@ const Signup = () => {
   const navigate = useNavigate();
   const { verifyToken } = useAuth();
   const { setUser } = useUserContext();
-  const [formData, setFormData] = useState({
-    email: "",
-    fullname: "",
-    username: "",
-    password: "",
-  });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
   const handleSignup = async (values) => {
     try {

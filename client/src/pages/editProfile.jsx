@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -61,16 +61,6 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      // const existingUsername = await axios.get(
-      //   `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`
-      // );
-      // console.log(existingUsername);
-
-      // if (existingUsername) {
-      //   showSnackbar("Username is already taken", )
-      //   return;
-      // }
-
       const profilePicture = await upload(selectedImage);
       editedUser.profilePicture = profilePicture;
       await axios.put(
