@@ -6,10 +6,12 @@ import PublicFooter from "../components/PublicFooter";
 import { useUserContext } from "../contexts/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const { verifyToken } = useAuth();
   const { setUser } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
@@ -37,6 +39,8 @@ const Login = () => {
       localStorage.setItem("user-token", JSON.stringify(user.token));
 
       setUser(user);
+
+      verifyToken();
 
       showSnackbar("Sign up successful");
 

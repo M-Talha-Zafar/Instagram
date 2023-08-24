@@ -22,6 +22,15 @@ const UserController = {
     }
   },
 
+  getStoryPictures: async (userId) => {
+    const users = await User.findById(userId).populate(
+      "following",
+      "username profilePicture stories"
+    );
+
+    return users.following;
+  },
+
   getByUsername: async (username) => {
     try {
       const user = await User.findOne({ username: username }).populate("posts");
@@ -181,7 +190,6 @@ const UserController = {
           const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
           return res.json({ ...user._doc, token });
         } catch (error) {
-          console.log(error);
           return res.status(500).json({ message: "An error occurred." });
         }
       }

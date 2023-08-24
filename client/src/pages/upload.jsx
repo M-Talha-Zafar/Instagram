@@ -29,7 +29,6 @@ const ImageUpload = () => {
 
         if (response.status === 200) {
           const imageUrl = response.data.secure_url;
-          console.log("Upload successful: ", imageUrl);
         } else {
           console.error("Image upload failed:", response.statusText);
         }

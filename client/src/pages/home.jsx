@@ -3,16 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
+import { useUserContext } from "../contexts/UserContext";
+import StoriesBar from "../components/StoriesBar";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useUserContext();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/posts/`
+          `${import.meta.env.VITE_BACKEND_URL}/posts/by-user/${user._id}`
         );
         setPosts(response.data);
         setIsLoading(false);
@@ -23,7 +26,7 @@ const Home = () => {
     };
 
     fetchPosts();
-  });
+  }, []);
 
   const navigate = useNavigate();
   return (
@@ -43,22 +46,25 @@ const Home = () => {
         </Box>
       ) : (
         <Box sx={{ minWidth: "40vw", marginTop: "auto" }}>
-          {posts.map((post, index) => (
-            <Box key={index}>
-              <Box
-                sx={{ cursor: "pointer", mb: 5 }}
-                onClick={() => navigate(`/post/${post._id}`)}
-              >
-                <PostCard
-                  displayAvatar
-                  displayCaption
-                  post={post}
-                  key={index}
-                  height={400}
-                />
+          <StoriesBar user={user} />
+          <Box mt={4}>
+            {posts.map((post, index) => (
+              <Box key={index}>
+                <Box
+                  sx={{ cursor: "pointer", mb: 5 }}
+                  onClick={() => navigate(`/post/${post._id}`)}
+                >
+                  <PostCard
+                    displayAvatar
+                    displayCaption
+                    post={post}
+                    key={index}
+                    height={400}
+                  />
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
+          </Box>
         </Box>
       )}
     </Box>

@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema(
     fullname: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -50,6 +49,12 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+      },
+    ],
+    stories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Story",
       },
     ],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],

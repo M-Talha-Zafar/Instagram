@@ -16,6 +16,16 @@ router.post("/signup", UserController.signup);
 
 router.get("/verify-token", UserController.verify);
 
+router.get("/stories/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const posts = await UserController.getStoryPictures(userId);
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
 router.get("/followers/:id", async (req, res) => {
   const userId = req.params.id;
   try {
@@ -105,7 +115,6 @@ router.get("/search", async (req, res) => {
     const users = await UserController.searchUser(searchQuery);
     res.send(users);
   } catch (error) {
-    console.log(error.message);
     res.status(500).json({
       error: "Failed to search for users",
       errorMessage: error.message,

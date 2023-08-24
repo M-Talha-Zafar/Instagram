@@ -100,7 +100,8 @@ const PostCard = ({
           >
             <Avatar
               sx={{ cursor: "pointer" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 navigate(`/${post.user.username}`);
               }}
               src={post.user.profilePicture}
@@ -108,7 +109,8 @@ const PostCard = ({
             />
             <Typography
               sx={{ marginLeft: "1rem", cursor: "pointer" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 navigate(`/${post.user.username}`);
               }}
             >

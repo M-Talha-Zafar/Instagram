@@ -11,6 +11,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/by-user/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const posts = await PostsController.getPostsForUser(userId);
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const postId = req.params.id;
   try {

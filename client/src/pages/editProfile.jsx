@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,12 +8,14 @@ import {
   Divider,
   Paper,
   Container,
+  MenuItem,
+  Popover,
 } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
-import axios from "axios";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 import { upload } from "../utilities/uploadImage";
+import axios from "axios";
 
 const EditProfile = () => {
   const { user, refreshUser } = useUserContext();
@@ -22,6 +24,25 @@ const EditProfile = () => {
 
   const [editedUser, setEditedUser] = useState(user);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [privacy, setPrivacy] = useState(user.isPrivate ? "private" : "public");
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelectPrivacy = (privacy) => {
+    setEditedUser((prevUser) => ({
+      ...prevUser,
+      isPrivate: privacy === "private" ? true : false,
+    }));
+    setPrivacy(privacy);
+    handleCloseMenu();
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -111,9 +132,31 @@ const EditProfile = () => {
             onChange={handleChange}
             sx={{ marginBottom: "1rem" }}
           />
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save Changes
-          </Button>
+          <Box display="flex" justifyContent="space-between">
+            <Box display="flex">
+              <Typography display="flex" alignItems="center">
+                Privacy:
+              </Typography>
+              <Button sx={{ textTransform: "none" }} onClick={handleOpenMenu}>
+                {privacy.charAt(0).toUpperCase() + privacy.slice(1)}
+              </Button>
+              <Popover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleCloseMenu}
+              >
+                <MenuItem onClick={() => handleSelectPrivacy("private")}>
+                  Private
+                </MenuItem>
+                <MenuItem onClick={() => handleSelectPrivacy("public")}>
+                  Public
+                </MenuItem>
+              </Popover>
+            </Box>
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              Save Changes
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>
