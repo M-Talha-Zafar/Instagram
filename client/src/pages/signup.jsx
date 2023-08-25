@@ -1,7 +1,7 @@
 import { Box, Typography, TextField, Button, Link } from "@mui/material";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import InstagramText from "../images/instagram-text.svg";
-import PublicFooter from "../components/PublicFooter";
+import PublicFooter from "../components/utilities/PublicFooter";
 import { useUserContext } from "../contexts/UserContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";

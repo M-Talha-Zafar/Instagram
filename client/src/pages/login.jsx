@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import HomeImage from "../images/instagram-home.png";
 import InstagramText from "../images/instagram-text.svg";
-import PublicFooter from "../components/PublicFooter";
+import PublicFooter from "../components/utilities/PublicFooter";
 import { useAuth } from "../contexts/AuthContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";

@@ -11,7 +11,7 @@ import { useUserContext } from "../contexts/UserContext";
 import { upload } from "../utilities/uploadImage";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import axios from "axios";
-import ImageCarousel from "../components/ImageCarousel";
+import ImageCarousel from "../components/utilities/ImageCarousel";
 import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {

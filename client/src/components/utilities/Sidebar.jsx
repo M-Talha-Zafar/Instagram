@@ -5,7 +5,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import InstagramText from "../images/instagram-text.svg";
+import InstagramText from "../../images/instagram-text.svg";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
