@@ -1,3 +1,5 @@
+const storyFlushQueue = require("../jobs/story");
+const { TimeIntervals } = require("../constants/constants");
 const Story = require("../models/story");
 const User = require("../models/user");
 
@@ -14,8 +16,15 @@ const StoryController = {
         $push: { stories: newStory._id },
       });
 
+      await storyFlushQueue.add(
+        "flush-story",
+        { storyId: newStory._id },
+        { delay: TimeIntervals.ONE_DAY }
+      );
+
       return newStory;
     } catch (error) {
+      console.log(error);
       throw new Error("An error occurred while creating the story");
     }
   },

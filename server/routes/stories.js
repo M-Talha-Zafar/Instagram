@@ -4,6 +4,7 @@ const StoryController = require("../controllers/stories");
 
 router.post("/", async (req, res) => {
   const { userId, image } = req.body;
+  console.log("Recieved request...");
   try {
     const newStory = await StoryController.create(userId, image);
     res.status(201).json(newStory);

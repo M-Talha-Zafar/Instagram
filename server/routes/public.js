@@ -16,7 +16,9 @@ router.post("/login", async (req, res) => {
         return res.status(401).json({ message: "Invalid credentials." });
       }
 
-      const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+      const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+        expiresIn: "6h",
+      });
       return res.json({ ...user._doc, token });
     } catch (error) {
       return res.status(500).json({ message: "An error occurred." });
@@ -49,7 +51,9 @@ router.post("/signup", async (req, res) => {
 
     await newUser.save();
 
-    const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
+    const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY, {
+      expiresIn: "6h",
+    });
     return res.json({ ...newUser._doc, token });
   } catch (error) {
     console.log(error);

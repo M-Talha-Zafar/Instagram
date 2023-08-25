@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const CommentsController = require("../controllers/comments");
 
-// GET all comments for a specific post
 router.get("/:postId", async (req, res) => {
   const postId = req.params.postId;
   try {
@@ -13,7 +12,6 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-// CREATE a new comment for a specific post
 router.post("/:postId", async (req, res) => {
   const postId = req.params.postId;
   const commentData = req.body;
@@ -28,7 +26,6 @@ router.post("/:postId", async (req, res) => {
   }
 });
 
-// UPDATE comment by ID
 router.put("/:id", async (req, res) => {
   const commentId = req.params.id;
   const updatedData = req.body;
@@ -43,7 +40,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE comment by ID
 router.delete("/:id", async (req, res) => {
   const commentId = req.params.id;
   try {

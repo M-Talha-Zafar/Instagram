@@ -128,17 +128,6 @@ const Login = () => {
                   </Form>
                 </Formik>
               </Box>
-              <Typography>
-                <Link
-                  sx={{
-                    textDecoration: "none",
-                    color: "#499EF6",
-                  }}
-                  href="#"
-                >
-                  Forgot Password?
-                </Link>
-              </Typography>
             </Box>
             <Box
               sx={{
