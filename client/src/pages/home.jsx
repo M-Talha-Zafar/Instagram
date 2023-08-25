@@ -12,26 +12,26 @@ const Home = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const token = localStorage.getItem("user-token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/posts/by-user/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setPosts(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        setIsLoading(false);
-      }
-    };
+  const fetchPosts = async () => {
+    try {
+      const token = localStorage.getItem("user-token");
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/by-user/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPosts(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -64,6 +64,7 @@ const Home = () => {
                     displayAvatar
                     displayCaption
                     post={post}
+                    fetchPost={fetchPosts}
                     key={index}
                     height={400}
                   />

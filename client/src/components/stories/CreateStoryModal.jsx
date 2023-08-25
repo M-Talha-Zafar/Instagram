@@ -46,8 +46,6 @@ const CreateStoryModal = ({ open, onClose, user }) => {
 
     const token = localStorage.getItem("user-token");
 
-    console.log("Sending...");
-
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/stories`,

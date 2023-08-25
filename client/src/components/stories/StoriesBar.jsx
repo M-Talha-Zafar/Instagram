@@ -14,23 +14,6 @@ const StoriesBar = ({ user: currentUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleOpenViewModal = () => {
-    setOpenViewModal(true);
-  };
-
-  const handleCloseViewModal = () => {
-    setOpenViewModal(false);
-  };
-
-  const handleOpenCreateModal = () => {
-    setOpenCreateModal(true);
-  };
-
-  const handleCloseCreateModal = () => {
-    setOpenCreateModal(false);
-    fetchStoryUsers();
-  };
-
   const fetchStoryUsers = async () => {
     setIsLoading(true);
     try {
@@ -65,6 +48,23 @@ const StoriesBar = ({ user: currentUser }) => {
     handleOpenCreateModal();
   };
 
+  const handleOpenViewModal = () => {
+    setOpenViewModal(true);
+  };
+
+  const handleCloseViewModal = () => {
+    setOpenViewModal(false);
+  };
+
+  const handleOpenCreateModal = () => {
+    setOpenCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setOpenCreateModal(false);
+    fetchStoryUsers();
+  };
+
   return (
     <Box sx={{ maxWidth: "40vw " }}>
       <Box
@@ -94,7 +94,7 @@ const StoriesBar = ({ user: currentUser }) => {
               height: "100px",
               width: "100px",
               cursor: "pointer",
-              mt: 1,
+              margin: "0.5rem",
             }}
             onClick={handleAddStory}
           >
@@ -118,7 +118,7 @@ const StoriesBar = ({ user: currentUser }) => {
                   sx={{
                     height: "100px",
                     width: "100px",
-                    border: "2px solid #E1306C",
+                    border: "3px solid #E1306C",
                     cursor: "pointer",
                   }}
                   onClick={() => handleStoryClick(user)}
@@ -131,7 +131,7 @@ const StoriesBar = ({ user: currentUser }) => {
                   variant="subtitle1"
                   align="center"
                 >
-                  <b>{user.username}</b>
+                  {user.username}
                 </Typography>
               </Box>
             ))}

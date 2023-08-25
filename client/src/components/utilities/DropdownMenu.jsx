@@ -4,7 +4,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const DropdownMenu = ({ onDelete, onEdit }) => {
+const DropdownMenu = ({ onDelete, onEdit, sx }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -32,6 +32,7 @@ const DropdownMenu = ({ onDelete, onEdit }) => {
         aria-controls="dropdown-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        sx={sx}
       >
         <MoreVertIcon />
       </IconButton>
@@ -43,10 +44,12 @@ const DropdownMenu = ({ onDelete, onEdit }) => {
         onClose={handleClose}
       >
         <Box>
-          <MenuItem onClick={handleEdit}>
-            <EditIcon sx={{ marginRight: 1 }} />
-            Edit
-          </MenuItem>
+          {onEdit && (
+            <MenuItem onClick={handleEdit}>
+              <EditIcon sx={{ marginRight: 1 }} />
+              Edit
+            </MenuItem>
+          )}
           <MenuItem onClick={handleDelete}>
             <DeleteIcon sx={{ marginRight: 1 }} />
             Delete

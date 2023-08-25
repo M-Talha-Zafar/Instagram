@@ -13,16 +13,10 @@ const ImageCarousel = ({
     setCurrentIndex(index);
   };
 
-  useEffect(() => {
-    if (currentIndex >= images.length) {
-      setCurrentIndex(images.length - 1);
-    }
-  }, [currentIndex, images, setCurrentIndex]);
-
   return (
     <Carousel
       index={currentIndex}
-      onChangeIndex={handleChangeIndex}
+      onChange={handleChangeIndex}
       autoPlay={false}
       sx={{ mt: 3, mb: 3, overflow: "visible" }}
     >

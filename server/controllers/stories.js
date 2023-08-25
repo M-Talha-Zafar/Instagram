@@ -29,6 +29,27 @@ const StoryController = {
     }
   },
 
+  deleteById: async (storyId) => {
+    try {
+      const story = await Story.findOne({ _id: storyId });
+
+      if (!story) {
+        throw new Error("Story not found");
+      }
+
+      await User.findByIdAndUpdate(story.user._id, {
+        $pull: { stories: storyId },
+      });
+
+      await Story.findByIdAndDelete(storyId);
+
+      return "Story deleted successfully";
+    } catch (error) {
+      console.log(error);
+      throw new Error("An error occurred while deleting the story");
+    }
+  },
+
   getAllByUserId: async (userId) => {
     try {
       const stories = await Story.find({ user: userId }).populate("user");
