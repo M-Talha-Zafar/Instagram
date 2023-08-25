@@ -44,10 +44,17 @@ const CreateStoryModal = ({ open, onClose, user }) => {
       image: imageLink,
     };
 
+    const token = localStorage.getItem("user-token");
+
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/stories`,
-        storyData
+        storyData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       showSnackbar("Story added successfully");

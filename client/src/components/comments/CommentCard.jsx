@@ -16,8 +16,14 @@ const CommentCard = ({ comment, fetchPost }) => {
 
   const handleDelete = async () => {
     try {
+      const token = localStorage.getItem("user-token");
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`
+        `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       handleClose();
       showSnackbar("Commnt deleted");
@@ -29,10 +35,16 @@ const CommentCard = ({ comment, fetchPost }) => {
 
   const handleEditComment = async () => {
     try {
+      const token = localStorage.getItem("user-token");
       await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`,
         {
           text: editedBody,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       showSnackbar("Comment updated");

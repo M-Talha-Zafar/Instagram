@@ -11,13 +11,32 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (formData) => {
     const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/users/login`,
+      `${import.meta.env.VITE_BACKEND_URL}/login`,
       formData
     );
     const user = response.data;
-    localStorage.setItem("user-token", JSON.stringify(user.token));
+    localStorage.setItem("user-token", user.token);
     setUser(user);
     await verifyToken();
+  };
+
+  const signup = async (formData) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/signup`,
+        formData
+      );
+      const user = response.data;
+
+      localStorage.setItem("user-token", user.token);
+
+      setUser(user);
+
+      await verifyToken();
+    } catch (error) {
+      console.error("Error signing up:", error);
+      showSnackbar("Error signing up: " + error.response.data.message, "error");
+    }
   };
 
   const logout = () => {
@@ -32,14 +51,14 @@ export const AuthProvider = ({ children }) => {
   const verifyToken = async () => {
     setIsLoading(true);
     try {
-      const token = JSON.parse(localStorage.getItem("user-token"));
+      const token = localStorage.getItem("user-token");
       if (!token) {
         setIsAuthenticated(false);
         return;
       }
       if (token) {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/verify-token`,
+          `${import.meta.env.VITE_BACKEND_URL}/verify-token`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -64,7 +83,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ verifyToken, isAuthenticated, isLoading, login, logout }}
+      value={{ verifyToken, isAuthenticated, isLoading, login, signup, logout }}
     >
       {children}
     </AuthContext.Provider>

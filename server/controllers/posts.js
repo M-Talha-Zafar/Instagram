@@ -112,6 +112,24 @@ const PostController = {
       throw new Error("An error occurred while deleting the post");
     }
   },
+
+  like: async (userId, postId) => {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { $addToSet: { likedBy: userId } }, // Using $addToSet to avoid duplicate likes
+      { new: true }
+    );
+    return post;
+  },
+
+  unlike: async (userId, postId) => {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { likedBy: userId } },
+      { new: true }
+    );
+    return post;
+  },
 };
 
 module.exports = PostController;

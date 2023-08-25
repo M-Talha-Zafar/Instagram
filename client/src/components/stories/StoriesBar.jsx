@@ -34,8 +34,14 @@ const StoriesBar = ({ user: currentUser }) => {
   const fetchStoryUsers = async () => {
     setIsLoading(true);
     try {
+      const token = localStorage.getItem("user-token");
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/stories/${currentUser._id}`
+        `${import.meta.env.VITE_BACKEND_URL}/users/stories/${currentUser._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       setUsers([currentUser, ...response.data]);

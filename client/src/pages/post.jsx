@@ -22,10 +22,17 @@ const Post = () => {
       return;
     }
 
+    const token = localStorage.getItem("user-token");
+
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/comments/${post._id}`,
-        { text: commentText, userId: user._id }
+        { text: commentText, userId: user._id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       fetchPost();
@@ -37,9 +44,15 @@ const Post = () => {
   };
 
   const fetchPost = async () => {
+    const token = localStorage.getItem("user-token");
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${id}`
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setPost(response.data);
       setIsLoading(false);

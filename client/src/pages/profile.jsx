@@ -41,8 +41,14 @@ const Profile = () => {
 
   const fetchUser = async () => {
     try {
+      const token = localStorage.getItem("user-token");
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/by-username/${username}`
+        `${import.meta.env.VITE_BACKEND_URL}/users/by-username/${username}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setUser(response.data);
       setIsLoading(false);
@@ -54,17 +60,28 @@ const Profile = () => {
 
   const handleSendFollowRequest = async () => {
     try {
+      const token = localStorage.getItem("user-token");
       let response;
       if (user.isPrivate) {
         response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/users/send-follow-request`,
-          { senderId: currentUser._id, recipientId: user._id }
+          { senderId: currentUser._id, recipientId: user._id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         showSnackbar("Follow request sent");
       } else {
         response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/users/add-follower`,
-          { senderId: currentUser._id, recipientId: user._id }
+          { senderId: currentUser._id, recipientId: user._id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         showSnackbar("Account followed");
       }
@@ -76,9 +93,16 @@ const Profile = () => {
 
   const handleUnfollow = async () => {
     try {
+      const token = localStorage.getItem("user-token");
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/unfollow-user`,
-        { userId: currentUser._id, unfollowId: user._id }
+        { userId: currentUser._id, unfollowId: user._id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       showSnackbar("Account unfollowed");
       setUser(response.data);
@@ -89,9 +113,15 @@ const Profile = () => {
 
   const handleDeleteRequest = async () => {
     try {
+      const token = localStorage.getItem("user-token");
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/delete-follow-request`,
-        { userId: currentUser._id, unfollowId: user._id }
+        { userId: currentUser._id, unfollowId: user._id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       showSnackbar("Follow request deleted");

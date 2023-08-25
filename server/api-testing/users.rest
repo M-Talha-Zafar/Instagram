@@ -1,1 +1,4 @@
-GET http://localhost:3000/users/by-username/emteazy
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGQ4ZDlmMjM5ZDM2YjFjYjBmMDU5YyIsImlhdCI6MTY5MjkzNzY1NX0.xRK-a8JNIgzXuVTlItWkS7tUivh_ceIGVg_UTH9rJ3k
+
+GET http://localhost:3000/protected
+Authorization: Bearer {{token}}

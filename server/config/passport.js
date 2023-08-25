@@ -48,7 +48,7 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const user = await User.findById(payload.id).populate("posts");
+        const user = await User.findById(payload.id);
         if (user) {
           return done(null, user);
         } else {

@@ -22,8 +22,14 @@ const UsersModal = ({ open, onClose, context, user }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        const token = localStorage.getItem("user-token");
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/${context}/${user._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/users/${context}/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         setUsers(response.data);

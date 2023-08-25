@@ -29,8 +29,14 @@ const Requests = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
+        const token = localStorage.getItem("user-token");
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/requests/${user._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/users/requests/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setRequests(response.data);
       } catch (ex) {
@@ -46,9 +52,15 @@ const Requests = () => {
   const handleAcceptRequest = async (friendId) => {
     const userId = user._id;
     try {
+      const token = localStorage.getItem("user-token");
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/accept-follow-request`,
-        { userId, friendId }
+        { userId, friendId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const updatedRequests = requests.filter((user) => user._id !== friendId);
       setRequests(updatedRequests);
@@ -62,9 +74,15 @@ const Requests = () => {
   const handleRemoveRequest = async (userId) => {
     const unfollowId = user._id;
     try {
+      const token = localStorage.getItem("user-token");
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/users/delete-follow-request`,
-        { userId, unfollowId }
+        { userId, unfollowId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const updatedRequests = requests.filter((user) => user._id !== userId);
       setRequests(updatedRequests);

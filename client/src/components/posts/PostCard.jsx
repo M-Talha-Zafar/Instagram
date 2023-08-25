@@ -9,10 +9,14 @@ import {
   Divider,
   TextField,
   Button,
+  IconButton,
 } from "@mui/material";
 import DropdownMenu from "../utilities/DropdownMenu";
 import { useState } from "react";
 import ConfirmationModal from "../utilities/ConfirmationModal";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { useUserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -28,17 +32,23 @@ const PostCard = ({
   displayCaption,
   displayComments,
 }) => {
-  const { refreshUser } = useUserContext();
+  const { user, refreshUser } = useUserContext();
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedCaption, setEditedCaption] = useState(post.caption);
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const token = localStorage.getItem("user-token");
 
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       showSnackbar("Post deleted");
       refreshUser();
@@ -50,9 +60,17 @@ const PostCard = ({
 
   const handleEditPost = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`, {
-        caption: editedCaption,
-      });
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`,
+        {
+          caption: editedCaption,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       showSnackbar("Post updated");
       fetchPost();
     } catch (err) {
@@ -76,6 +94,48 @@ const PostCard = ({
 
   const endEditMode = () => {
     setEditMode(false);
+  };
+
+  const handleLike = async (e) => {
+    e.stopPropagation();
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/like`,
+        {
+          userId: user._id,
+          postId: post._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchPost();
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleUnlike = async (e) => {
+    e.stopPropagation();
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/unlike`,
+        {
+          userId: user._id,
+          postId: post._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchPost();
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
   };
 
   return (
@@ -137,6 +197,30 @@ const PostCard = ({
           </Card>
         ))}
       </Carousel>
+      <Box display="flex" alignItems="center" m={0}>
+        {post.likedBy.includes(user._id) ? (
+          <IconButton onClick={handleUnlike}>
+            <FavoriteIcon sx={{ color: "red" }} />
+          </IconButton>
+        ) : (
+          <IconButton onClick={handleLike}>
+            <FavoriteBorderIcon sx={{ color: "black" }} />
+          </IconButton>
+        )}
+        <Typography variant="subtitle2" mr={2}>
+          {post.likedBy.length === 0
+            ? "No likes"
+            : post.likedBy.length === 1
+            ? `${post.likedBy.length} like`
+            : `${post.likedBy.length} likes`}
+        </Typography>
+        <ChatBubbleOutlineIcon color="red" />
+        <Typography variant="subtitle2" ml={1}>
+          {post.comments.length === 0
+            ? "No comments"
+            : `${post.comments.length} comments`}
+        </Typography>
+      </Box>
       {displayCaption &&
         post &&
         (editMode ? (

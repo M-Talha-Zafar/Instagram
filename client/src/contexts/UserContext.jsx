@@ -13,8 +13,14 @@ export const UserProvider = ({ children }) => {
   const refreshUser = async () => {
     if (!user) return;
     try {
+      const token = localStorage.getItem("user-token");
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/${user?._id}`
+        `${import.meta.env.VITE_BACKEND_URL}/users/${user?._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setUser(response.data);
     } catch (error) {

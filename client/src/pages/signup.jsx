@@ -27,29 +27,16 @@ const errorStyles = {
 const Signup = () => {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { verifyToken } = useAuth();
-  const { setUser } = useUserContext();
+  const { signup } = useAuth();
 
   const handleSignup = async (values) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/users/signup`,
-        values
-      );
-      const user = response.data;
-
-      localStorage.setItem("user-token", JSON.stringify(user.token));
-
-      setUser(user);
-
-      verifyToken();
-
-      showSnackbar("Sign up successful");
-
+      await signup(values);
       navigate("/");
-    } catch (error) {
-      console.error("Error signing up:", error);
-      showSnackbar("Error signing up: " + error.response.data.message, "error");
+      showSnackbar("Sign up successful");
+    } catch (ex) {
+      console.error(ex);
+      showSnackbar("Error signing up: " + ex.response.data.message, "error");
     }
   };
 

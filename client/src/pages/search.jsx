@@ -29,11 +29,18 @@ const Search = () => {
       setUsers([]);
       return;
     }
+
     try {
+      const token = localStorage.getItem("user-token");
       const response = await axios.get(
         `${
           import.meta.env.VITE_BACKEND_URL
-        }/users/search?searchQuery=${searchQuery}`
+        }/users/search?searchQuery=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setUsers(response.data);
     } catch (error) {

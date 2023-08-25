@@ -41,6 +41,26 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/like/", async (req, res) => {
+  const { userId, postId } = req.body;
+  try {
+    const post = await PostsController.like(userId, postId);
+    res.status(200).json({ message: "Post liked", post });
+  } catch (error) {
+    res.status(400).json({ message: "Failed to create post." });
+  }
+});
+
+router.post("/unlike/", async (req, res) => {
+  const { userId, postId } = req.body;
+  try {
+    const post = await PostsController.unlike(userId, postId);
+    res.status(200).json({ message: "Post unliked", post });
+  } catch (error) {
+    res.status(400).json({ message: "Failed to create post." });
+  }
+});
+
 router.put("/:id", async (req, res) => {
   const postId = req.params.id;
   const updatedData = req.body;

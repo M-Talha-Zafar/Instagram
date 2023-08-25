@@ -63,9 +63,17 @@ const EditProfile = () => {
     try {
       const profilePicture = await upload(selectedImage);
       editedUser.profilePicture = profilePicture;
+
+      const token = localStorage.getItem("user-token");
+
       await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`,
-        editedUser
+        editedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       refreshUser();
       showSnackbar("Changed have been saved");

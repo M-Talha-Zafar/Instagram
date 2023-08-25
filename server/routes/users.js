@@ -10,12 +10,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/login", UserController.login);
-
-router.post("/signup", UserController.signup);
-
-router.get("/verify-token", UserController.verify);
-
 router.get("/stories/:id", async (req, res) => {
   const userId = req.params.id;
   try {

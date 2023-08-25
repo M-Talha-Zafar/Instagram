@@ -22,9 +22,16 @@ const ViewStoryModal = ({ open, onClose, user }) => {
     const fetchStories = async () => {
       setIsLoading(true);
 
+      const token = localStorage.getItem("user-token");
+
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/stories/user/${user._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/stories/user/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         setImages(response.data.map((story) => story.image));

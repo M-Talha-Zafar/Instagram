@@ -10,12 +10,19 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUserContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        const token = localStorage.getItem("user-token");
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/posts/by-user/${user._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/posts/by-user/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setPosts(response.data);
         setIsLoading(false);
@@ -28,7 +35,6 @@ const Home = () => {
     fetchPosts();
   }, []);
 
-  const navigate = useNavigate();
   return (
     <Box
       sx={{

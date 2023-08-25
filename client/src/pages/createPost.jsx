@@ -79,10 +79,17 @@ const CreatePost = () => {
       userId: user._id,
     };
 
+    const token = localStorage.getItem("user-token");
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/posts`,
-        postData
+        postData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       showSnackbar("Post made successfully");
       refreshUser();
