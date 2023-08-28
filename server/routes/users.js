@@ -150,7 +150,6 @@ router.post("/", async (req, res) => {
 router.put("/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
   const updatedData = req.body;
-  console.log("I'm here");
   try {
     const updatedUser = await UserController.updateById(userId, updatedData);
     res.send(updatedUser);
