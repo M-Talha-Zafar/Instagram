@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const CommentsController = require("../controllers/comments");
+const commentAuth = require("../middlewares/comments/authorization");
 
 router.get("/:postId", async (req, res) => {
   const postId = req.params.postId;
@@ -26,7 +27,7 @@ router.post("/:postId", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", commentAuth, async (req, res) => {
   const commentId = req.params.id;
   const updatedData = req.body;
   try {
@@ -40,7 +41,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", commentAuth, async (req, res) => {
   const commentId = req.params.id;
   try {
     await CommentsController.deleteById(commentId);

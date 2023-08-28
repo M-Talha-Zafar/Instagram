@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const UserController = require("../controllers/users");
+const userAuth = require("../middlewares/users/authorization");
 
 router.get("/", async (req, res) => {
   try {
@@ -146,7 +147,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
   const updatedData = req.body;
   try {
@@ -157,7 +158,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
   try {
     const deletedUser = await UserController.deleteById(userId);

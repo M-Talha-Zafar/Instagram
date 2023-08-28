@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const StoryController = require("../controllers/stories");
+const storyAuth = require("../middlewares/stories/authorization");
 
 router.post("/", async (req, res) => {
   const { userId, image } = req.body;
@@ -12,7 +13,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", storyAuth, async (req, res) => {
   const storyId = req.params.id;
   try {
     const deletedStory = await StoryController.deleteById(storyId);

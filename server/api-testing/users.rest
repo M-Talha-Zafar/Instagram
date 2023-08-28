@@ -1,4 +1,3 @@
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGQ4ZDlmMjM5ZDM2YjFjYjBmMDU5YyIsImlhdCI6MTY5MjkzNzY1NX0.xRK-a8JNIgzXuVTlItWkS7tUivh_ceIGVg_UTH9rJ3k
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTQyZTNlNWRkZWM3MzE2ZTg0YWZjNiIsImlhdCI6MTY5MzIwOTIxMiwiZXhwIjoxNjkzMjMwODEyfQ.y3pFIqjIwcMj3oHY3hUolATD80n5Ejc3ONV5EimOnNc
 
-GET http://localhost:3000/protected
-Authorization: Bearer {{token}}
+GET http://localhost:3000/users

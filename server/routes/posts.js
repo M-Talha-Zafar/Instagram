@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const PostsController = require("../controllers/posts");
+const postAuth = require("../middlewares/posts/authorization");
 
 router.get("/", async (req, res) => {
   try {
@@ -61,7 +62,7 @@ router.post("/unlike/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", postAuth, async (req, res) => {
   const postId = req.params.id;
   const updatedData = req.body;
   try {
@@ -72,7 +73,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", postAuth, async (req, res) => {
   const postId = req.params.id;
   try {
     await PostsController.deleteById(postId);

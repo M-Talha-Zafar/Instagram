@@ -112,7 +112,7 @@ const StoriesBar = ({ user: currentUser }) => {
           users
             .filter((user) => user?.stories.length > 0)
             .map((user) => (
-              <Box key={user._id} sx={{ margin: "0.5rem" }}>
+              <Box key={user._id}>
                 <Avatar
                   src={user.profilePicture}
                   sx={{
@@ -120,6 +120,7 @@ const StoriesBar = ({ user: currentUser }) => {
                     width: "100px",
                     border: "3px solid #E1306C",
                     cursor: "pointer",
+                    margin: "0.5rem",
                   }}
                   onClick={() => handleStoryClick(user)}
                 />

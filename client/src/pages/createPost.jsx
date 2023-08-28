@@ -105,11 +105,28 @@ const CreatePost = () => {
       <Paper elevation={3}>
         <Box sx={{ display: "flex", flexDirection: "column" }} p={4}>
           <Typography variant="h4">Create a Post</Typography>
-          <Box display="flex" mt={4}>
+          <TextField
+            sx={{ mt: 3, mb: 3 }}
+            label="Caption"
+            variant="outlined"
+            rows={4}
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            fullWidth
+          />
+          {images.length > 0 && (
+            <ImageCarousel
+              images={imageURLs}
+              removeImage={handleRemoveImage}
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+            />
+          )}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Button
               variant="outlined"
               component="label"
-              sx={{ textTransform: "none", marginLeft: "auto" }}
+              sx={{ textTransform: "none" }}
             >
               Add image
               <input
@@ -120,25 +137,6 @@ const CreatePost = () => {
                 hidden
               />
             </Button>
-          </Box>
-          {images.length > 0 && (
-            <ImageCarousel
-              images={imageURLs}
-              removeImage={handleRemoveImage}
-              currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}
-            />
-          )}
-          <TextField
-            sx={{ mt: 3, mb: 3 }}
-            label="Caption"
-            variant="outlined"
-            rows={4}
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            fullWidth
-          />
-          <Box ml="auto">
             <Button variant="contained" onClick={handleSubmit}>
               Create Post
             </Button>
