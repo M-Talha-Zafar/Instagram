@@ -71,4 +71,8 @@ router.get("/verify-token", (req, res) => {
   })(req, res);
 });
 
+router.get("/", (req, res) => {
+  res.send("Hello, Express!");
+});
+
 module.exports = router;

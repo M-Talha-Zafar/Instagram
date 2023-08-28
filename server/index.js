@@ -31,14 +31,6 @@ app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
 app.use("/stories", storyRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
-
-app.get("/protected", authenticateJwt, (req, res) => {
-  res.json({ message: "Authenticated user", user: req.user });
-});
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

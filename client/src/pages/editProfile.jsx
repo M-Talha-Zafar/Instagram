@@ -66,7 +66,7 @@ const EditProfile = () => {
 
       const token = localStorage.getItem("user-token");
 
-      await axios.put(
+      const newUser = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`,
         editedUser,
         {
@@ -77,7 +77,7 @@ const EditProfile = () => {
       );
       refreshUser();
       showSnackbar("Changed have been saved");
-      navigate(`/${user.username}`);
+      navigate(`/${newUser.username}`);
     } catch (error) {
       console.error(error.response.data.error);
       showSnackbar(

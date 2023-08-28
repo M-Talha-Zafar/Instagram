@@ -3,7 +3,6 @@ const User = require("../../models/user");
 const userAuth = async (req, res, next) => {
   const requestedId = req.params.id;
   const currentId = req.user._id;
-
   try {
     const user = await User.findById(requestedId);
 
@@ -12,7 +11,10 @@ const userAuth = async (req, res, next) => {
       return;
     }
 
-    if (user._id !== currentId) {
+    console.log("User: ", user);
+    console.log(user._id, currentId);
+
+    if (!user._id.equals(currentId)) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
