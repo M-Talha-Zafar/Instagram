@@ -22,22 +22,33 @@ Instagram is a social media platform that aims to provide a customizable and ext
 ## Getting Started
 
 1. Clone the repository: `git clone https://github.com/M-Talha_Zafar/Instagram.git`
-   
-3. Navigate to the project directory: `cd Instagram`
-   
-4. Install dependencies:
+2. Navigate to the project directory: `cd Instagram`
+3. Install dependencies:
    - Frontend: `cd client && npm install`
    - Backend: `cd server && npm install`
-     
-5. Set up the database:
+4. Set up the database:
    - Create a MongoDB database and update the database configuration in the backend's `.env` file.
-     
-6. Start the development servers:
+5. Start the development servers:
    - Frontend: `cd client && npm run dev`
    - Backend: `cd server && npm run server`
    - Dev: `cd server && npm run dev`
-     
-7. Open your browser and navigate to `http://localhost:5173` to access the application.
+6. Open your browser and navigate to `http://localhost:5173` to access the application.
+
+## Running with Docker
+
+To run the app using Docker, follow these steps:
+
+1. Make sure you have Docker installed on your system.
+
+2. Clone the repository and navigate to the project directory.
+
+3. Build the Docker images:
+
+   `docker compose build`
+
+4. Run docker containers:
+
+   `docker compose up`
 
 ## Contributing
 
