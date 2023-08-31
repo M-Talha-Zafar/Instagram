@@ -148,6 +148,92 @@ const Profile = () => {
     fetchUser();
   }, [username]);
 
+  const renderButton = () => {
+    return (
+      <Box>
+        {isOwner ? (
+          <Button
+            variant="filled"
+            onClick={() => navigate("/user/edit")}
+            sx={{
+              ml: 2,
+              background: "#F0F0F0",
+              textTransform: "none",
+            }}
+          >
+            Edit profile
+          </Button>
+        ) : accessible ? (
+          <Button
+            variant="filled"
+            onClick={handleUnfollow}
+            sx={{
+              ml: 2,
+              textTransform: "none",
+            }}
+          >
+            Following
+          </Button>
+        ) : requested ? (
+          <Button
+            variant="filled"
+            onClick={handleDeleteRequest}
+            sx={{
+              ml: 2,
+              textTransform: "none",
+            }}
+          >
+            Requested
+          </Button>
+        ) : (
+          <Button
+            variant="filled"
+            onClick={handleSendFollowRequest}
+            sx={{
+              ml: 2,
+              textTransform: "none",
+            }}
+          >
+            Follow
+          </Button>
+        )}
+      </Box>
+    );
+  };
+
+  const renderPosts = () => {
+    return (
+      <Box>
+        {!isOwner && user.isPrivate && !accessible ? (
+          <Box sx={{ width: "100%", textAlign: "center", mt: 10 }}>
+            <LockIcon sx={{ height: "5rem", width: "5rem" }} />
+            <Typography mb={2} variant="h3">
+              This account is private
+            </Typography>
+            <Typography variant="subtitle1">
+              Follow them to see their posts
+            </Typography>
+          </Box>
+        ) : (
+          <Box mt={3}>
+            <Grid container spacing={2}>
+              {user.posts?.map((post, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Box
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/post/${post._id}`)}
+                  >
+                    <PostCard post={post} key={index} height={300} />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
+      </Box>
+    );
+  };
+
   return (
     <Container>
       {isLoading ? (
@@ -187,52 +273,7 @@ const Profile = () => {
                   <Box ml={2}>
                     <Box display="flex">
                       <Typography variant="h6">{user.fullname}</Typography>
-                      {isOwner ? (
-                        <Button
-                          variant="filled"
-                          onClick={() => navigate("/user/edit")}
-                          sx={{
-                            ml: 2,
-                            background: "#F0F0F0",
-                            textTransform: "none",
-                          }}
-                        >
-                          Edit profile
-                        </Button>
-                      ) : accessible ? (
-                        <Button
-                          variant="filled"
-                          onClick={handleUnfollow}
-                          sx={{
-                            ml: 2,
-                            textTransform: "none",
-                          }}
-                        >
-                          Following
-                        </Button>
-                      ) : requested ? (
-                        <Button
-                          variant="filled"
-                          onClick={handleDeleteRequest}
-                          sx={{
-                            ml: 2,
-                            textTransform: "none",
-                          }}
-                        >
-                          Requested
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="filled"
-                          onClick={handleSendFollowRequest}
-                          sx={{
-                            ml: 2,
-                            textTransform: "none",
-                          }}
-                        >
-                          Follow
-                        </Button>
-                      )}
+                      {renderButton()}
                     </Box>
                     <Typography variant="subtitle1">
                       @{user.username}
@@ -284,32 +325,7 @@ const Profile = () => {
               </Grid>
             </Paper>
           </Box>
-          {!isOwner && user.isPrivate && !accessible ? (
-            <Box sx={{ width: "100%", textAlign: "center", mt: 10 }}>
-              <LockIcon sx={{ height: "5rem", width: "5rem" }} />
-              <Typography mb={2} variant="h3">
-                This account is private
-              </Typography>
-              <Typography variant="subtitle1">
-                Follow them to see their posts
-              </Typography>
-            </Box>
-          ) : (
-            <Box mt={3}>
-              <Grid container spacing={2}>
-                {user.posts?.map((post, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Box
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => navigate(`/post/${post._id}`)}
-                    >
-                      <PostCard post={post} key={index} height={300} />
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
+          {renderPosts()}
         </>
       ) : (
         <Box sx={{ width: "100%", textAlign: "center", mt: 5 }}>
