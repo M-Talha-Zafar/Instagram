@@ -1,0 +1,29 @@
+version: "3"
+services:
+  client:
+    build: ./client
+    container_name: react-container
+    ports:
+      - "5000:5000" # Map container's port 3000 to host's port 3000
+    volumes:
+      - ./client:/app # Mount your local client directory into the container
+    environment:
+      - NODE_ENV=development # Set environment variables if needed
+    depends_on:
+      - backend # Depends on the 'backend' service
+
+  backend:
+    build: ./server
+    container_name: node-container
+    restart: always
+    ports:
+      - "3000:3000" # Map container's port 4000 to host's port 4000
+    volumes:
+      - ./server:/app # Mount your local server directory into the container
+    environment:
+      - NODE_ENV=development # Set environment variables if needed
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
