@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
-const secretKey = process.env.SECRET_KEY;
+const secretKey = process.env.JWT_SECRET_KEY;
 
 passport.use(
   "local",
