@@ -14,7 +14,7 @@ const StoryController = {
 
       await User.findByIdAndUpdate(userId, {
         $push: { stories: newStory._id },
-      });
+      }).lean();
 
       await storyFlushQueue.add(
         "flush-story",

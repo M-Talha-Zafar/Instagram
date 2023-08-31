@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useUserContext } from "./UserContext";
+import { useSnackbar } from "./SnackbarContext";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const { setUser } = useUserContext();
+  const { showSnackbar } = useSnackbar();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,31 +23,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (formData) => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/signup`,
-        formData
-      );
-      const user = response.data;
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/signup`,
+      formData
+    );
 
-      localStorage.setItem("user-token", user.token);
+    const user = response.data;
+    localStorage.setItem("user-token", user.token);
+    setUser(user);
 
-      setUser(user);
-
-      await verifyToken();
-    } catch (error) {
-      console.error("Error signing up:", error);
-      showSnackbar("Error signing up: " + error.response.data.message, "error");
-    }
+    await verifyToken();
   };
 
-  const logout = () => {
-    try {
-      localStorage.removeItem("user-token");
-      verifyToken();
-    } catch (error) {
-      console.error("Error logging out: ", error);
-    }
+  const logout = async () => {
+    localStorage.removeItem("user-token");
+    await verifyToken();
   };
 
   const verifyToken = async () => {
