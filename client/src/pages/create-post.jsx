@@ -6,10 +6,12 @@ import {
   TextField,
   Typography,
   Box,
+  IconButton,
 } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
 import { upload } from "../utilities/uploadImage";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import ImageIcon from "@mui/icons-material/Image";
 import axios from "axios";
 import ImageCarousel from "../components/utilities/ImageCarousel";
 import { useNavigate } from "react-router-dom";
@@ -101,49 +103,73 @@ const CreatePost = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Paper elevation={3}>
-        <Box sx={{ display: "flex", flexDirection: "column" }} p={4}>
-          <Typography variant="h4">Create a Post</Typography>
-          <TextField
-            sx={{ mt: 3, mb: 3 }}
-            label="Caption"
-            variant="outlined"
-            rows={4}
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            fullWidth
-          />
-          {images.length > 0 && (
-            <ImageCarousel
-              images={imageURLs}
-              removeImage={handleRemoveImage}
-              currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}
-            />
-          )}
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        overflowY: "auto",
+      }}
+    >
+      <Container maxWidth="md">
+        <Paper elevation={3}>
+          <Box sx={{ display: "flex", flexDirection: "column" }} p={4}>
+            <Box textAlign="center" mt={5}>
+              <Typography variant="h3" mb={1}>
+                Create a post
+              </Typography>
+              <Typography variant="subtitle2" sx={{ color: "grey" }}>
+                A post can have upto 10 images
+              </Typography>
+            </Box>
+            <TextField
+              sx={{ mt: 3, mb: 3 }}
+              label="Caption"
               variant="outlined"
-              component="label"
-              sx={{ textTransform: "none" }}
-            >
-              Add image
-              <input
-                type="file"
-                multiple
-                onChange={handleImageChange}
-                accept="image/*"
-                hidden
+              rows={4}
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              fullWidth
+            />
+            {images.length > 0 && (
+              <ImageCarousel
+                images={imageURLs}
+                removeImage={handleRemoveImage}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
               />
-            </Button>
-            <Button variant="contained" onClick={handleSubmit}>
-              Create Post
-            </Button>
+            )}
+            {images.length > 10 && (
+              <Typography align="center" variant="subtitle1" color="secondary">
+                Please make sure only 10 images are selected
+              </Typography>
+            )}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <IconButton
+                variant="outlined"
+                component="label"
+                sx={{ textTransform: "none" }}
+              >
+                <ImageIcon />
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  hidden
+                />
+              </IconButton>
+              <Button
+                disabled={images.length > 10}
+                variant="contained"
+                onClick={handleSubmit}
+              >
+                Create Post
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 
