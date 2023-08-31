@@ -36,8 +36,8 @@ const Sidebar = () => {
       navigate("/login");
       showSnackbar("Logout successful");
     } catch (ex) {
-      console.error(ex);
-      showSnackbar("Error signing up: " + ex.response.data.message, "error");
+      console.error("Error logging out: ", error);
+      showSnackbar("Error logging out: " + ex.response.data.message, "error");
     }
   };
 

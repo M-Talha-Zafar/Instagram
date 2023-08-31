@@ -105,6 +105,7 @@ const CreatePost = () => {
   return (
     <Box
       sx={{
+        p: 2,
         width: "100%",
         height: "100%",
         overflowY: "auto",
@@ -114,11 +115,12 @@ const CreatePost = () => {
         <Paper elevation={3}>
           <Box sx={{ display: "flex", flexDirection: "column" }} p={4}>
             <Box textAlign="center" mt={5}>
-              <Typography variant="h3" mb={1}>
+              <Typography variant="h2" mb={1}>
                 Create a post
               </Typography>
               <Typography variant="subtitle2" sx={{ color: "grey" }}>
-                A post can have upto 10 images
+                You can share anything that is on your mind here! <br />
+                Note: A post can have upto 10 images
               </Typography>
             </Box>
             <TextField
