@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { footerLinks } from "../../utilities/constants";
+import footerLinks from "../../utilities/constants";
 
 const PublicFooter = () => {
   return (
