@@ -143,7 +143,7 @@ const Profile = () => {
     handleOpen();
   };
 
-  const fetch = useCallback(fetchUser, [user]);
+  const fetch = useCallback(fetchUser, [username]);
 
   useEffect(() => {
     setIsLoading(true);

@@ -61,7 +61,7 @@ const CreateStoryModal = ({ open, onClose, user }) => {
       onClose();
     } catch (ex) {
       console.error("Error adding story:", ex);
-      showSnackbar("Error adding stry: " + ex.response.data.message, "error");
+      showSnackbar("Error adding story: " + ex.response.data.message, "error");
     }
   };
 

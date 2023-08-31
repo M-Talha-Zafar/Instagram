@@ -58,7 +58,10 @@ const ViewStoryModal = ({ open, onClose, user }) => {
       }
     };
 
-    if (user._id) fetchStories();
+    if (user._id) {
+      setImages([]);
+      fetchStories();
+    }
   }, [open]);
 
   const handleDelete = async () => {
