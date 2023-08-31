@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("./config/passport");
 const cors = require("cors");
-require("./config/database");
+const connectToMongo = require("./config/database");
 
 const app = express();
 const publicRoutes = require("./routes/public");
@@ -11,6 +11,8 @@ const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
 const storyRoutes = require("./routes/stories");
 const { authenticateJwt } = require("./middlewares/authentication");
+
+connectToMongo();
 
 app.use(cors());
 app.use(express.json());
