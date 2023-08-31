@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TextField, IconButton, Box, CircularProgress } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
@@ -62,9 +62,11 @@ const Post = () => {
     }
   };
 
+  const fetchPosts = useCallback(fetchPost, [id]);
+
   useEffect(() => {
-    fetchPost();
-  }, [id]);
+    fetchPosts();
+  }, [fetchPosts]);
 
   return (
     <Box

@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import PostCard from "../components/posts/PostCard";
 import { useUserContext } from "../contexts/UserContext";
@@ -31,8 +31,10 @@ const Home = () => {
     }
   };
 
+  const fetch = useCallback(fetchPosts, []);
+
   useEffect(() => {
-    fetchPosts();
+    fetch();
   }, []);
 
   return (

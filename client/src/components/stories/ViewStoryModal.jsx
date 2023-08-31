@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import ImageCarousel from "../utilities/ImageCarousel";
 import { useUserContext } from "../../contexts/UserContext";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -137,4 +137,4 @@ const ViewStoryModal = ({ open, onClose, user }) => {
   );
 };
 
-export default ViewStoryModal;
+export default memo(ViewStoryModal);

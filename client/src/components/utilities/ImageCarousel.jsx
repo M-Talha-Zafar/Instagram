@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import Carousel from "react-material-ui-carousel";
 import { Card, CardMedia, IconButton, Box } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { memo } from "react";
 
 const ImageCarousel = ({
   images,
@@ -47,4 +47,4 @@ const ImageCarousel = ({
   );
 };
 
-export default ImageCarousel;
+export default memo(ImageCarousel);

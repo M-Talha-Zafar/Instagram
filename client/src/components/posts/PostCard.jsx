@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import DropdownMenu from "../utilities/DropdownMenu";
-import { useState } from "react";
+import { memo, useState } from "react";
 import ConfirmationModal from "../utilities/ConfirmationModal";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -274,4 +274,4 @@ const PostCard = ({
   );
 };
 
-export default PostCard;
+export default memo(PostCard);

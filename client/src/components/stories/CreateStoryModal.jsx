@@ -1,6 +1,6 @@
 import { Box, Typography, Modal, Button, IconButton } from "@mui/material";
 import axios from "axios";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { upload } from "../../utilities/uploadImage";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import SendIcon from "@mui/icons-material/Send";
@@ -130,4 +130,4 @@ const CreateStoryModal = ({ open, onClose, user }) => {
   );
 };
 
-export default CreateStoryModal;
+export default memo(CreateStoryModal);

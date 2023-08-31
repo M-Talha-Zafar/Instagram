@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import DropdownMenu from "../utilities/DropdownMenu";
 import { useUserContext } from "../../contexts/UserContext";
@@ -123,4 +123,4 @@ const CommentCard = ({ comment, fetchPost }) => {
   );
 };
 
-export default CommentCard;
+export default memo(CommentCard);
