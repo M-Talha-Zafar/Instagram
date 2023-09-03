@@ -10,6 +10,10 @@ const storySchema = new mongoose.Schema(
     image: {
       type: String,
       required: true,
+      validate: {
+        validator: (image) => typeof image === "string" && image.trim() !== "",
+        message: "Image URL is required.",
+      },
     },
   },
   { timestamps: true }
