@@ -3,45 +3,82 @@ const { TimeIntervals } = require("../constants/constants");
 const Story = require("../models/story");
 const User = require("../models/user");
 const upload = require("../utilities/upload-image");
+const mongoose = require("mongoose");
 
 const StoryService = {
   create: async (userId, image) => {
-    const url = await upload(image);
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const newStory = new Story({
-      user: userId,
-      image: url,
-    });
+    try {
+      const url = await upload(image);
 
-    await newStory.save();
+      const newStory = new Story({
+        user: userId,
+        image: url,
+      });
 
-    await User.findByIdAndUpdate(userId, {
-      $push: { stories: newStory._id },
-    }).lean();
+      await newStory.save({ session });
 
-    await storyFlushQueue.add(
-      "flush-story",
-      { storyId: newStory._id },
-      { delay: TimeIntervals.ONE_DAY }
-    );
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: { stories: newStory._id },
+        },
+        { session }
+      ).lean();
 
-    return newStory;
+      await storyFlushQueue.add(
+        "flush-story",
+        { storyId: newStory._id },
+        { delay: TimeIntervals.ONE_DAY }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return newStory;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      console.error(error.message);
+      throw new Error("An error occurred while creating the story");
+    }
   },
 
   deleteById: async (storyId) => {
-    const story = await Story.findOne({ _id: storyId });
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    if (!story) {
-      throw new Error("Story not found");
+    try {
+      const story = await Story.findOne({ _id: storyId }).session(session);
+
+      if (!story) {
+        throw new Error("Story not found");
+      }
+
+      await User.findByIdAndUpdate(
+        story.user._id,
+        {
+          $pull: { stories: storyId },
+        },
+        { session }
+      );
+
+      const deletedStory = await Story.findByIdAndDelete(storyId).session(
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return deletedStory;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      console.error(error.message);
+      throw new Error("An error occurred while deleting the story");
     }
-
-    await User.findByIdAndUpdate(story.user._id, {
-      $pull: { stories: storyId },
-    });
-
-    const deletedStory = await Story.findByIdAndDelete(storyId);
-
-    return deletedStory;
   },
 
   getAllByUserId: async (userId) => {

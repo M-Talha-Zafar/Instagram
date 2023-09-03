@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema(
         type: String,
         required: true,
         validate: {
-          validator: (images) => Array.isArray(images) && images.length > 0,
+          validator: (images) => images.length > 0,
           message: "At least one image is required.",
         },
       },

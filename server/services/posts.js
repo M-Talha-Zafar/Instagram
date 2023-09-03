@@ -68,6 +68,9 @@ const PostService = {
   },
 
   create: async (postData) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
       const uploadPromises = postData.images.map(async (url) => {
         const uploadedUrl = await upload(url);
@@ -82,15 +85,22 @@ const PostService = {
         user: postData.userId,
       });
 
-      await newPost.save();
+      await newPost.save({ session });
 
-      await User.findByIdAndUpdate(postData.userId, {
-        $push: { posts: newPost._id },
-      });
+      await User.findByIdAndUpdate(
+        postData.userId,
+        { $push: { posts: newPost._id } },
+        { session }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
 
       return newPost;
     } catch (error) {
-      console.log(error.message);
+      await session.abortTransaction();
+      session.endSession();
+      console.error(error.message);
       throw new Error("An error occurred while creating the post");
     }
   },
@@ -104,24 +114,32 @@ const PostService = {
   },
 
   deleteById: async (postId) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      const deletedPost = await Post.findByIdAndDelete(postId);
+      const deletedPost = await Post.findByIdAndDelete(postId).session(session);
       if (!deletedPost) {
         throw new Error("Post not found");
       }
 
       const commentIds = deletedPost.comments.map((comment) => comment._id);
 
-      await Comment.deleteMany({ _id: { $in: commentIds } });
+      await Comment.deleteMany({ _id: { $in: commentIds } }).session(session);
 
       await User.findByIdAndUpdate(
         deletedPost.user,
         { $pull: { posts: postId } },
-        { new: true }
+        { new: true, session }
       );
+
+      await session.commitTransaction();
+      session.endSession();
 
       return deletedPost;
     } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
       throw new Error("An error occurred while deleting the post");
     }
   },
