@@ -4,6 +4,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const { TimeIntervals } = require("../constants/constants");
 
 router.post("/login", async (req, res) => {
   passport.authenticate("local", { session: false }, async (err, user) => {
@@ -17,7 +18,7 @@ router.post("/login", async (req, res) => {
       }
 
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "6h",
+        expiresIn: TimeIntervals.SIX_HOURS,
       });
       return res.json({ ...user._doc, token });
     } catch (error) {
@@ -52,7 +53,7 @@ router.post("/signup", async (req, res) => {
     await newUser.save();
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "6h",
+      expiresIn: TimeIntervals.SIX_HOURS,
     });
     return res.json({ ...newUser._doc, token });
   } catch (error) {
