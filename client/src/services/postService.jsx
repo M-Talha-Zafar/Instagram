@@ -1,5 +1,5 @@
 import { useUserContext } from "../contexts/UserContext";
-import axiosInstance from "../utilities/instance";
+import axiosInstance from "../utilities/axios";
 import { useState } from "react";
 
 export function postService() {

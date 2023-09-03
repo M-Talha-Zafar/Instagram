@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const UserController = require("../controllers/users");
 const userAuth = require("../middlewares/users/authorization");
+const upload = require("../utilities/upload-image");
 
 router.get("/", async (req, res) => {
   try {
@@ -149,9 +150,13 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
-  const updatedData = req.body;
+  const { editedUser, image } = req.body;
   try {
-    const updatedUser = await UserController.updateById(userId, updatedData);
+    const updatedUser = await UserController.updateById(
+      userId,
+      editedUser,
+      image
+    );
     res.send(updatedUser);
   } catch (ex) {
     res.status(500).send({ error: ex.message });

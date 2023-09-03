@@ -10,7 +10,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
-import { upload } from "../utilities/uploadImage";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import ImageIcon from "@mui/icons-material/Image";
 import ImageCarousel from "../components/utilities/ImageCarousel";
@@ -19,41 +18,36 @@ import { postService } from "../services/postService";
 
 const CreatePost = () => {
   const { user, refreshUser } = useUserContext();
-  const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+
   const [images, setImages] = useState([]);
   const [caption, setCaption] = useState("");
-  const [imageURLs, setImageURLs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { createPost, creatingPost } = postService();
 
-  const handleImageChange = (event) => {
+  const navigate = useNavigate();
+
+  const handleImageChange = async (event) => {
     const selectedFiles = event.target.files;
     const imageFiles = Array.from(selectedFiles).filter((file) =>
       file.type.startsWith("image/")
     );
 
-    let urls = [];
-    for (const file of selectedFiles) {
-      const imageUrl = URL.createObjectURL(file);
-      urls.push(imageUrl);
-    }
-    setImageURLs([...imageURLs, ...urls]);
+    const base64Promises = imageFiles.map((file) => convertToBase64(file));
 
-    setImages([...images, ...imageFiles]);
+    try {
+      const base64Images = await Promise.all(base64Promises);
+      setImages([...images, ...base64Images]);
+    } catch (error) {
+      console.error("Error converting images to Base64:", error);
+    }
   };
 
   const handleRemoveImage = (index) => {
     const updatedImages = [...images];
-    const updatedURLs = [...imageURLs];
-
     updatedImages.splice(index, 1);
-    updatedURLs.splice(index, 1);
-
     setCurrentIndex(index < updatedImages.length ? index : index - 1);
-
     setImages(updatedImages);
-    setImageURLs(updatedURLs);
   };
 
   const handleSubmit = async () => {
@@ -66,19 +60,8 @@ const CreatePost = () => {
       return;
     }
 
-    const imageLinks = [];
-
-    for (const image of images) {
-      try {
-        const link = await upload(image);
-        imageLinks.push(link);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      }
-    }
-
     const postData = {
-      images: imageLinks,
+      images: images,
       caption: caption,
       userId: user._id,
     };
@@ -92,6 +75,19 @@ const CreatePost = () => {
       console.error("Error creating post:", ex);
       showSnackbar("Error signing up: " + ex.response.data.message, "error");
     }
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   return (
@@ -126,7 +122,7 @@ const CreatePost = () => {
             />
             {images.length > 0 && (
               <ImageCarousel
-                images={imageURLs}
+                images={images}
                 removeImage={handleRemoveImage}
                 currentIndex={currentIndex}
                 setCurrentIndex={setCurrentIndex}

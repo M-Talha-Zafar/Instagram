@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const upload = require("../utilities/upload-image");
 
 const UserController = {
   getAll: async () => {
@@ -53,8 +54,10 @@ const UserController = {
     }
   },
 
-  updateById: async (id, updatedData) => {
+  updateById: async (id, updatedData, image) => {
     try {
+      const url = await upload(image);
+      updatedData.profilePicture = url;
       return User.findByIdAndUpdate(id, updatedData, { new: true });
     } catch (ex) {
       throw new Error("An error occurred while updating the user");

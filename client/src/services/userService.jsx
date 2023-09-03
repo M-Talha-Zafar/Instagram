@@ -1,5 +1,5 @@
 import { useUserContext } from "../contexts/UserContext";
-import axiosInstance from "../utilities/instance";
+import axiosInstance from "../utilities/axios";
 import { useState } from "react";
 
 export function userService() {
@@ -42,10 +42,13 @@ export function userService() {
     }
   };
 
-  const updateUser = async (data) => {
+  const updateUser = async (editedUser, image) => {
     try {
       setUpdatingUser(true);
-      const response = await axiosInstance.put(`/users/${user._id}`, data);
+      const response = await axiosInstance.put(`/users/${user._id}`, {
+        editedUser,
+        image,
+      });
       return response.data;
     } catch (error) {
       throw error;

@@ -15,7 +15,6 @@ import {
 import { useUserContext } from "../contexts/UserContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
-import { upload } from "../utilities/uploadImage";
 import { userService } from "../services/userService";
 
 const EditProfile = () => {
@@ -49,7 +48,11 @@ const EditProfile = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
     } else {
       alert("Please select a valid image file.");
       event.target.value = "";
@@ -63,22 +66,21 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const profilePicture = await upload(selectedImage);
-      editedUser.profilePicture = profilePicture;
-
-      const newUser = await updateUser(editedUser);
+      const newUser = await updateUser(editedUser, selectedImage);
 
       refreshUser();
       showSnackbar("Changed have been saved");
       navigate(`/${newUser.username}`);
     } catch (error) {
-      console.error(error.response.data.error);
-      showSnackbar(
-        "Error updating profile: " +
-          error.response.data.error.includes("E11000")
-          ? "Username is already taken"
-          : error
-      );
+      console.error(error);
+      if (error.response)
+        showSnackbar(
+          "Error updating profile: " +
+            error.response.data?.error?.includes("E11000")
+            ? "Username is already taken"
+            : error,
+          "error"
+        );
     }
   };
 
@@ -92,11 +94,7 @@ const EditProfile = () => {
             sx={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}
           >
             <Avatar
-              src={
-                selectedImage
-                  ? URL.createObjectURL(selectedImage)
-                  : user.profilePicture
-              }
+              src={selectedImage ? selectedImage : user.profilePicture}
               sx={{ width: 100, height: 100 }}
             />
             <Button

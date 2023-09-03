@@ -2,6 +2,7 @@ const Post = require("../models/post");
 const User = require("../models/user");
 const Comment = require("../models/comment");
 const mongoose = require("mongoose");
+const upload = require("../utilities/upload-image");
 
 const PostController = {
   getAll: async () => {
@@ -68,8 +69,15 @@ const PostController = {
 
   create: async (postData) => {
     try {
+      const uploadPromises = postData.images.map(async (url) => {
+        const uploadedUrl = await upload(url);
+        return uploadedUrl;
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+
       const newPost = new Post({
-        images: postData.images,
+        images: uploadedImages,
         caption: postData.caption,
         user: postData.userId,
       });

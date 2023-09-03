@@ -15,12 +15,13 @@ const { authenticateJwt } = require("./middlewares/authentication");
 connectToMongo();
 
 app.use(cors());
-app.use(express.json());
 app.use(
-  bodyParser.urlencoded({
+  bodyParser.json({
     extended: true,
+    limit: "5mb",
   })
 );
+app.use(express.json());
 
 app.use(passport.initialize());
 

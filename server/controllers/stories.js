@@ -2,14 +2,18 @@ const storyFlushQueue = require("../jobs/story");
 const { TimeIntervals } = require("../constants/constants");
 const Story = require("../models/story");
 const User = require("../models/user");
+const upload = require("../utilities/upload-image");
 
 const StoryController = {
   create: async (userId, image) => {
     try {
+      const url = await upload(image);
+
       const newStory = new Story({
         user: userId,
-        image: image,
+        image: url,
       });
+
       await newStory.save();
 
       await User.findByIdAndUpdate(userId, {
