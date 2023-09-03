@@ -10,16 +10,18 @@ import {
   Container,
   MenuItem,
   Popover,
+  CircularProgress,
 } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 import { upload } from "../utilities/uploadImage";
-import axios from "axios";
+import { useApiCall } from "../hooks/useApi";
 
 const EditProfile = () => {
   const { user, refreshUser } = useUserContext();
   const { showSnackbar } = useSnackbar();
+  const { updateUser, updatingUser } = useApiCall();
   const navigate = useNavigate();
 
   const [editedUser, setEditedUser] = useState(user);
@@ -64,20 +66,11 @@ const EditProfile = () => {
       const profilePicture = await upload(selectedImage);
       editedUser.profilePicture = profilePicture;
 
-      const token = localStorage.getItem("user-token");
+      const newUser = await updateUser(editedUser);
 
-      const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/users/${user._id}`,
-        editedUser,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
       refreshUser();
       showSnackbar("Changed have been saved");
-      navigate(`/${response.data.username}`);
+      navigate(`/${newUser.username}`);
     } catch (error) {
       console.error(error.response.data.error);
       showSnackbar(
@@ -99,7 +92,11 @@ const EditProfile = () => {
             sx={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}
           >
             <Avatar
-              src={user.profilePicture}
+              src={
+                selectedImage
+                  ? URL.createObjectURL(selectedImage)
+                  : user.profilePicture
+              }
               sx={{ width: 100, height: 100 }}
             />
             <Button
@@ -166,9 +163,15 @@ const EditProfile = () => {
                 </MenuItem>
               </Popover>
             </Box>
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Save Changes
-            </Button>
+            {updatingUser ? (
+              <Box>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Button variant="contained" color="primary" onClick={handleSave}>
+                Save Changes
+              </Button>
+            )}
           </Box>
         </Box>
       </Paper>

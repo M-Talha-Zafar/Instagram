@@ -14,8 +14,8 @@ import UsersModal from "../components/users/UsersModal";
 import LockIcon from "@mui/icons-material/Lock";
 import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
-import axios from "axios";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { useApiCall } from "../hooks/useApi";
 
 const Profile = () => {
   const { username } = useParams();
@@ -23,9 +23,21 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const { user: currentUser } = useUserContext();
   const [context, setContext] = useState();
-  const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const {
+    getUserByUsername,
+    loadingUser,
+    sendFollowRequest,
+    sendingRequest,
+    addFollower,
+    addingFollower,
+    unfollowUser,
+    unfollowingUser,
+    cancelRequest,
+    cancellingRequest,
+  } = useApiCall();
 
   const isOwner = user && currentUser.username === username;
   const accessible = user && user.followers.includes(currentUser._id);
@@ -41,51 +53,31 @@ const Profile = () => {
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem("user-token");
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/by-username/${username}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUser(response.data);
-      setIsLoading(false);
+      const user = await getUserByUsername(username);
+      setUser(user);
     } catch (error) {
       console.error("Error fetching post:", error);
-      setIsLoading(false);
     }
   };
 
   const handleSendFollowRequest = async () => {
     try {
       const token = localStorage.getItem("user-token");
-      let response;
+      let updatedUser;
       if (user.isPrivate) {
-        response = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/users/send-follow-request`,
-          { senderId: currentUser._id, recipientId: user._id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        updatedUser = await sendFollowRequest({
+          senderId: currentUser._id,
+          recipientId: user._id,
+        });
         showSnackbar("Follow request sent");
       } else {
-        response = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/users/add-follower`,
-          { senderId: currentUser._id, recipientId: user._id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        updatedUser = await addFollower({
+          senderId: currentUser._id,
+          recipientId: user._id,
+        });
         showSnackbar("Account followed");
       }
-      setUser(response.data);
+      setUser(updatedUser);
     } catch (error) {
       console.error("Error sending follow request:", error);
     }
@@ -93,19 +85,12 @@ const Profile = () => {
 
   const handleUnfollow = async () => {
     try {
-      const token = localStorage.getItem("user-token");
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/users/unfollow-user`,
-        { userId: currentUser._id, unfollowId: user._id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const updatedUser = await unfollowUser({
+        userId: currentUser._id,
+        unfollowId: user._id,
+      });
       showSnackbar("Account unfollowed");
-      setUser(response.data);
+      setUser(updatedUser);
     } catch (error) {
       console.error("Error sending follow request:", error);
     }
@@ -113,19 +98,13 @@ const Profile = () => {
 
   const handleDeleteRequest = async () => {
     try {
-      const token = localStorage.getItem("user-token");
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/users/delete-follow-request`,
-        { userId: currentUser._id, unfollowId: user._id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const updatedUser = await cancelRequest({
+        userId: currentUser._id,
+        unfollowId: user._id,
+      });
 
       showSnackbar("Follow request deleted");
-      setUser(response.data);
+      setUser(updatedUser);
     } catch (error) {
       console.error("Error sending follow request:", error);
     }
@@ -146,7 +125,6 @@ const Profile = () => {
   const fetch = useCallback(fetchUser, [username]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetch();
   }, [fetch]);
 
@@ -238,7 +216,7 @@ const Profile = () => {
 
   return (
     <Container>
-      {isLoading ? (
+      {loadingUser ? (
         <Box
           sx={{
             display: "flex",
@@ -273,9 +251,13 @@ const Profile = () => {
                     sx={{ width: 100, height: 100 }}
                   />
                   <Box ml={2}>
-                    <Box display="flex">
+                    <Box display="flex" alignItems="center">
                       <Typography variant="h6">{user.fullname}</Typography>
                       {renderButton()}
+                      {(addingFollower ||
+                        sendingRequest ||
+                        unfollowingUser ||
+                        cancellingRequest) && <CircularProgress size={20} />}
                     </Box>
                     <Typography variant="subtitle1">
                       @{user.username}

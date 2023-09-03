@@ -1,33 +1,38 @@
 import { memo, useState } from "react";
-import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import DropdownMenu from "../utilities/DropdownMenu";
 import { useUserContext } from "../../contexts/UserContext";
-import axios from "axios";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import ConfirmationModal from "../utilities/ConfirmationModal";
+import { useApiCall } from "../../hooks/useApi";
 
-const CommentCard = ({ comment, fetchPost }) => {
+const CommentCard = ({
+  comment,
+  deleteComment,
+  updateComment,
+  deletingComment,
+  updatingComment,
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [editedBody, setEditedBody] = useState(comment.text);
   const [open, setOpen] = useState(false);
   const { showSnackbar } = useSnackbar();
   const { user } = useUserContext();
+
   const isOwner = user && comment && user._id === comment.user._id;
 
   const handleDelete = async () => {
     try {
-      const token = localStorage.getItem("user-token");
-      await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await deleteComment(comment._id);
       handleClose();
-      showSnackbar("Commnt deleted");
-      fetchPost();
+      showSnackbar("Comment deleted");
     } catch (error) {
       console.error(error);
     }
@@ -35,20 +40,8 @@ const CommentCard = ({ comment, fetchPost }) => {
 
   const handleEditComment = async () => {
     try {
-      const token = localStorage.getItem("user-token");
-      await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/comments/${comment._id}`,
-        {
-          text: editedBody,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await updateComment(comment._id, editedBody);
       showSnackbar("Comment updated");
-      fetchPost();
     } catch (err) {
       console.error(err);
     }
@@ -82,6 +75,7 @@ const CommentCard = ({ comment, fetchPost }) => {
     >
       <ConfirmationModal
         open={open}
+        deleting={deletingComment}
         handleClose={handleClose}
         handleDelete={handleDelete}
         entityTitle={"Comment"}
@@ -103,7 +97,11 @@ const CommentCard = ({ comment, fetchPost }) => {
             }}
           >
             <Button onClick={endEditMode}> Cancel </Button>
-            <Button onClick={handleEditComment}> Save </Button>
+            {updatingComment ? (
+              <CircularProgress />
+            ) : (
+              <Button onClick={handleEditComment}> Save </Button>
+            )}
           </Box>
         </Box>
       ) : (
@@ -111,7 +109,7 @@ const CommentCard = ({ comment, fetchPost }) => {
           <Typography variant="subtitle1">
             <b>{comment.user.username}</b>
           </Typography>
-          <Typography>{comment.text}</Typography>
+          <Typography>{editedBody}</Typography>
         </Box>
       )}
       <Box sx={{ marginLeft: "auto" }}>

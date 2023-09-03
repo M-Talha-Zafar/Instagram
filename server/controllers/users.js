@@ -20,12 +20,19 @@ const UserController = {
   },
 
   getStoryPictures: async (userId) => {
-    const users = await User.findById(userId).populate(
+    const user = await User.findById(userId).populate(
       "following",
       "username profilePicture stories"
     );
 
-    return users.following;
+    const currentUserInfo = {
+      _id: user._id,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      stories: user.stories,
+    };
+
+    return [currentUserInfo, ...user.following];
   },
 
   getByUsername: async (username) => {

@@ -18,31 +18,22 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import axios from "axios";
+import { useApiCall } from "../hooks/useApi";
 
 const Requests = () => {
   const { user } = useUserContext();
   const [requests, setRequests] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { showSnackbar } = useSnackbar();
+  const { getRequests, loadingRequests } = useApiCall();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const token = localStorage.getItem("user-token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/requests/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setRequests(response.data);
+        const requests = await getRequests();
+        setRequests(requests);
       } catch (ex) {
         console.error(ex);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -95,7 +86,7 @@ const Requests = () => {
 
   return (
     <Container maxWidth="md">
-      {isLoading ? (
+      {loadingRequests ? (
         <Box
           sx={{
             display: "flex",

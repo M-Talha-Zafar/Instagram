@@ -7,13 +7,15 @@ import {
   Paper,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import axios from "axios";
 import UsersList from "../components/users/UsersList";
+import { useApiCall } from "../hooks/useApi";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { searchUsers, searching } = useApiCall();
   const [users, setUsers] = useState([]);
 
   const handleClearSearch = () => {
@@ -25,24 +27,14 @@ const Search = () => {
   };
 
   const fetchQueryResults = async () => {
-    if (searchQuery === "") {
+    if (searchQuery.trim() === "") {
       setUsers([]);
       return;
     }
 
     try {
-      const token = localStorage.getItem("user-token");
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_BACKEND_URL
-        }/users/search?searchQuery=${searchQuery}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUsers(response.data);
+      const users = await searchUsers(searchQuery);
+      setUsers(users);
     } catch (error) {
       console.error(error);
     }
@@ -80,13 +72,19 @@ const Search = () => {
           />
         </Box>
       </Paper>
-      <Box m={5}>
-        {users.length === 0 ? (
+      <Box
+        sx={{ p: 5, display: "flex", justifyContent: "center", width: "100%" }}
+      >
+        {searching ? (
+          <CircularProgress />
+        ) : users.length === 0 ? (
           <Typography align="center" variant="h6">
             No results
           </Typography>
         ) : (
-          <UsersList users={users} />
+          <Box sx={{ height: "60vh", overflowY: "auto", width: "100%" }}>
+            <UsersList users={users} />
+          </Box>
         )}
       </Box>
     </Container>

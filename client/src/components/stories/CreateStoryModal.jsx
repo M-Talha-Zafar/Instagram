@@ -1,5 +1,12 @@
-import { Box, Typography, Modal, Button, IconButton } from "@mui/material";
-import axios from "axios";
+import {
+  Box,
+  Typography,
+  Modal,
+  Button,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
+import { useApiCall } from "../../hooks/useApi";
 import { useState, memo } from "react";
 import { upload } from "../../utilities/uploadImage";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -17,9 +24,10 @@ const style = {
   p: 4,
 };
 
-const CreateStoryModal = ({ open, onClose, user }) => {
+const CreateStoryModal = ({ open, onClose, user, update }) => {
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState([]);
+  const { createStory, creatingStory } = useApiCall();
   const { showSnackbar } = useSnackbar();
 
   const handleImageChange = (event) => {
@@ -44,19 +52,9 @@ const CreateStoryModal = ({ open, onClose, user }) => {
       image: imageLink,
     };
 
-    const token = localStorage.getItem("user-token");
-
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/stories`,
-        storyData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await createStory(storyData);
+      update();
       showSnackbar("Story added successfully");
       onClose();
     } catch (ex) {
@@ -113,15 +111,19 @@ const CreateStoryModal = ({ open, onClose, user }) => {
                 style={{ height: "100%", width: "100%", marginTop: "1rem" }}
                 src={imageURL}
               />
-              <Box ml="auto">
-                <IconButton
-                  color="primary"
-                  aria-label="send-comment"
-                  onClick={handleSubmit}
-                >
-                  <SendIcon />
-                </IconButton>
-              </Box>
+              {creatingStory ? (
+                <CircularProgress />
+              ) : (
+                <Box ml="auto">
+                  <IconButton
+                    color="primary"
+                    aria-label="send-comment"
+                    onClick={handleSubmit}
+                  >
+                    <SendIcon />
+                  </IconButton>
+                </Box>
+              )}
             </Box>
           )}
         </Box>

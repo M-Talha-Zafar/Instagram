@@ -5,13 +5,13 @@ import {
   Avatar,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { memo, useEffect, useState } from "react";
 import ImageCarousel from "../utilities/ImageCarousel";
 import { useUserContext } from "../../contexts/UserContext";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import DropdownMenu from "../utilities/DropdownMenu";
 import ConfirmationModal from "../utilities/ConfirmationModal";
+import { useApiCall } from "../../hooks/useApi";
 
 const style = {
   position: "absolute",
@@ -23,38 +23,25 @@ const style = {
   borderRadius: "1rem",
 };
 
-const ViewStoryModal = ({ open, onClose, user }) => {
+const ViewStoryModal = ({ open, onClose, user, update }) => {
   const [images, setImages] = useState([]);
   const [stories, setStories] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { showSnackbar } = useSnackbar();
   const { user: currentUser } = useUserContext();
+  const { getStories, loadingStories, deleteStory, deletingStory } =
+    useApiCall();
   const isOwner = user && currentUser && user._id === currentUser._id;
 
   useEffect(() => {
     const fetchStories = async () => {
-      setIsLoading(true);
-
-      const token = localStorage.getItem("user-token");
-
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/stories/user/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setStories(response.data);
-        setImages(response.data.map((story) => story.image));
+        const stories = await getStories(user._id);
+        setStories(stories);
+        setImages(stories.map((story) => story.image));
       } catch (error) {
         console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -66,19 +53,9 @@ const ViewStoryModal = ({ open, onClose, user }) => {
 
   const handleDelete = async () => {
     try {
-      const token = localStorage.getItem("user-token");
-      const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/stories/${
-          stories[currentIndex]._id
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      showSnackbar(response.data);
+      await deleteStory(stories[currentIndex]._id);
+      update();
+      showSnackbar("Story deleted successfully");
       setCurrentIndex(0);
       handleClose();
       onClose();
@@ -114,9 +91,10 @@ const ViewStoryModal = ({ open, onClose, user }) => {
           handleClose={handleClose}
           handleDelete={handleDelete}
           entityTitle={"Story"}
+          deleting={deletingStory}
         />
         <Box>
-          {isLoading ? (
+          {loadingStories ? (
             <Box
               sx={{
                 display: "flex",

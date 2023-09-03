@@ -7,14 +7,15 @@ import {
   Typography,
   Box,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
 import { upload } from "../utilities/uploadImage";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import ImageIcon from "@mui/icons-material/Image";
-import axios from "axios";
 import ImageCarousel from "../components/utilities/ImageCarousel";
 import { useNavigate } from "react-router-dom";
+import { useApiCall } from "../hooks/useApi";
 
 const CreatePost = () => {
   const { user, refreshUser } = useUserContext();
@@ -24,6 +25,7 @@ const CreatePost = () => {
   const [caption, setCaption] = useState("");
   const [imageURLs, setImageURLs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { createPost, creatingPost } = useApiCall();
 
   const handleImageChange = (event) => {
     const selectedFiles = event.target.files;
@@ -81,21 +83,11 @@ const CreatePost = () => {
       userId: user._id,
     };
 
-    const token = localStorage.getItem("user-token");
-
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/posts`,
-        postData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const newPost = await createPost(postData);
       showSnackbar("Post made successfully");
       refreshUser();
-      navigate(`/post/${response.data._id}`);
+      navigate(`/post/${newPost._id}`);
     } catch (ex) {
       console.error("Error creating post:", ex);
       showSnackbar("Error signing up: " + ex.response.data.message, "error");
@@ -160,13 +152,19 @@ const CreatePost = () => {
                   hidden
                 />
               </IconButton>
-              <Button
-                disabled={images.length > 10}
-                variant="contained"
-                onClick={handleSubmit}
-              >
-                Create Post
-              </Button>
+              {creatingPost ? (
+                <Box>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Button
+                  disabled={images.length > 10}
+                  variant="contained"
+                  onClick={handleSubmit}
+                >
+                  Create Post
+                </Button>
+              )}
             </Box>
           </Box>
         </Paper>

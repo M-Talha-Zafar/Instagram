@@ -44,8 +44,8 @@ router.put("/:id", commentAuth, async (req, res) => {
 router.delete("/:id", commentAuth, async (req, res) => {
   const commentId = req.params.id;
   try {
-    await CommentsController.deleteById(commentId);
-    res.json({ message: "Comment deleted." });
+    const deletedComment = await CommentsController.deleteById(commentId);
+    res.json(deletedComment);
   } catch (error) {
     res.status(400).json({ message: "Failed to delete comment." });
   }

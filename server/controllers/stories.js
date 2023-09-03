@@ -41,9 +41,9 @@ const StoryController = {
         $pull: { stories: storyId },
       });
 
-      await Story.findByIdAndDelete(storyId);
+      const deletedStory = await Story.findByIdAndDelete(storyId);
 
-      return "Story deleted successfully";
+      return deletedStory;
     } catch (error) {
       console.log(error);
       throw new Error("An error occurred while deleting the story");

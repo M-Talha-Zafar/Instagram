@@ -1,4 +1,11 @@
-import { Box, Typography, TextField, Button, Link } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  CircularProgress,
+} from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import HomeImage from "../images/instagram-home.png";
@@ -7,6 +14,7 @@ import PublicFooter from "../components/utilities/PublicFooter";
 import { useAuth } from "../contexts/AuthContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   usernameOrEmail: Yup.string().required("Username or Email is required"),
@@ -22,16 +30,20 @@ const errorStyles = {
 const Login = () => {
   const { login } = useAuth();
   const { showSnackbar } = useSnackbar();
+  const [loggingIn, setLoggingIn] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (values) => {
     try {
+      setLoggingIn(true);
       await login(values);
       navigate("/");
       showSnackbar("Login successful");
     } catch (ex) {
       console.error(ex);
       showSnackbar("Error signing up: " + ex.response.data.message, "error");
+    } finally {
+      setLoggingIn(false);
     }
   };
 
@@ -117,14 +129,20 @@ const Login = () => {
                       name="password"
                       sx={{ marginBottom: "2rem" }}
                     />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                    >
-                      Login
-                    </Button>
+                    {loggingIn ? (
+                      <Box display="flex" justifyContent="center">
+                        <CircularProgress />
+                      </Box>
+                    ) : (
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                      >
+                        Login
+                      </Button>
+                    )}
                   </Form>
                 </Formik>
               </Box>

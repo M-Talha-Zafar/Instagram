@@ -1,43 +1,31 @@
-import { Avatar, Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import ViewStoryModal from "./ViewStoryModal";
 import CreateStoryModal from "./CreateStoryModal";
+import { useApiCall } from "../../hooks/useApi";
 
 const StoriesBar = ({ user: currentUser }) => {
   const [users, setUsers] = useState([]);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [storyUser, setStoryUser] = useState({});
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { fetchStoryUsers, loadingStoryUsers } = useApiCall();
   const navigate = useNavigate();
 
-  const fetchStoryUsers = async () => {
-    setIsLoading(true);
+  const loadStoryUsers = useCallback(async () => {
     try {
-      const token = localStorage.getItem("user-token");
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/stories/${currentUser._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setUsers([currentUser, ...response.data]);
+      const users = await fetchStoryUsers();
+      setUsers(users);
     } catch (error) {
       console.error("Error fetching users:", error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchStoryUsers();
-  }, []);
+    loadStoryUsers();
+  }, [loadStoryUsers]);
 
   const handleStoryClick = (user) => {
     setStoryUser(user);
@@ -82,11 +70,13 @@ const StoriesBar = ({ user: currentUser }) => {
           open={openViewModal}
           onClose={handleCloseViewModal}
           user={storyUser}
+          update={loadStoryUsers}
         />
         <CreateStoryModal
           open={openCreateModal}
           onClose={handleCloseCreateModal}
           user={currentUser}
+          update={loadStoryUsers}
         />
         <Box>
           <Avatar
@@ -108,7 +98,11 @@ const StoriesBar = ({ user: currentUser }) => {
             Add a story
           </Typography>
         </Box>
-        {!isLoading &&
+        {loadingStoryUsers ? (
+          <Box>
+            <CircularProgress sx={{ m: 2 }} />
+          </Box>
+        ) : (
           users
             .filter((user) => user?.stories.length > 0)
             .map((user) => (
@@ -135,7 +129,8 @@ const StoriesBar = ({ user: currentUser }) => {
                   {user.username}
                 </Typography>
               </Box>
-            ))}
+            ))
+        )}
       </Box>
     </Box>
   );

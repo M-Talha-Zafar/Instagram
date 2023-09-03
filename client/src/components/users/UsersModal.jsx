@@ -1,5 +1,5 @@
 import { Box, Typography, Modal, CircularProgress } from "@mui/material";
-import axios from "axios";
+import { useApiCall } from "../../hooks/useApi";
 import { useEffect, useState } from "react";
 import UsersList from "./UsersList";
 
@@ -17,31 +17,19 @@ const style = {
 
 const UsersModal = ({ open, onClose, context, user }) => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { getFollowOrFollowing, loadingFoF } = useApiCall();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("user-token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/users/${context}/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setUsers(response.data);
+        const users = await getFollowOrFollowing(context, user._id);
+        setUsers(users);
       } catch (error) {
         console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     if (context) {
-      setIsLoading(true);
       fetchUsers();
     }
   }, [open]);
@@ -59,7 +47,7 @@ const UsersModal = ({ open, onClose, context, user }) => {
             overflowX: "auto",
           }}
         >
-          {isLoading ? (
+          {loadingFoF ? (
             <Box
               sx={{
                 display: "flex",

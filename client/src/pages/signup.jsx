@@ -1,4 +1,11 @@
-import { Box, Typography, TextField, Button, Link } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  CircularProgress,
+} from "@mui/material";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import InstagramText from "../images/instagram-text.svg";
 import PublicFooter from "../components/utilities/PublicFooter";
@@ -6,6 +13,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email"),
@@ -24,17 +32,21 @@ const errorStyles = {
 
 const Signup = () => {
   const { showSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  const [signingUp, setSigningUp] = useState(false);
   const { signup } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignup = async (values) => {
     try {
+      setSigningUp(true);
       await signup(values);
       navigate("/");
       showSnackbar("Sign up successful");
     } catch (ex) {
       console.error(ex);
       showSnackbar("Error signing up: " + ex.response.data.message, "error");
+    } finally {
+      setSigningUp(false);
     }
   };
 
@@ -142,14 +154,20 @@ const Signup = () => {
                   name="password"
                   sx={{ marginBottom: "2rem" }}
                 />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  Sign up
-                </Button>
+                {signingUp ? (
+                  <Box display="flex" justifyContent="center">
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
+                    Sign up
+                  </Button>
+                )}
               </Form>
             </Formik>
           </Box>

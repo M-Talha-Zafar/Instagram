@@ -41,7 +41,18 @@ const CommentController = {
 
   deleteById: async (commentId) => {
     try {
-      return Comment.findByIdAndDelete(commentId);
+      const deletedComment = await Comment.findByIdAndDelete(commentId);
+      if (!deletedComment) {
+        throw new Error("Comment not found");
+      }
+
+      await Post.findByIdAndUpdate(
+        deletedComment.post,
+        { $pull: { comments: commentId } },
+        { new: true }
+      );
+
+      return deletedComment;
     } catch (error) {
       throw new Error("An error occurred while deleting the comment");
     }

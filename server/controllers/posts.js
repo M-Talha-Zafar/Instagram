@@ -1,5 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
+const Comment = require("../models/comment");
 const mongoose = require("mongoose");
 
 const PostController = {
@@ -100,6 +101,10 @@ const PostController = {
       if (!deletedPost) {
         throw new Error("Post not found");
       }
+
+      const commentIds = deletedPost.comments.map((comment) => comment._id);
+
+      await Comment.deleteMany({ _id: { $in: commentIds } });
 
       await User.findByIdAndUpdate(
         deletedPost.user,
