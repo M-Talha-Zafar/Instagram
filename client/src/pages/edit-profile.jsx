@@ -16,12 +16,12 @@ import { useUserContext } from "../contexts/UserContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 import { upload } from "../utilities/uploadImage";
-import { useApiCall } from "../hooks/useApi";
+import { userService } from "../services/userService";
 
 const EditProfile = () => {
   const { user, refreshUser } = useUserContext();
   const { showSnackbar } = useSnackbar();
-  const { updateUser, updatingUser } = useApiCall();
+  const { updateUser, updatingUser } = userService();
   const navigate = useNavigate();
 
   const [editedUser, setEditedUser] = useState(user);

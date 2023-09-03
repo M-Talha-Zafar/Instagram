@@ -11,11 +11,11 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import UsersList from "../components/users/UsersList";
-import { useApiCall } from "../hooks/useApi";
+import { userService } from "../services/userService";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { searchUsers, searching } = useApiCall();
+  const { searchUsers, searching } = userService();
   const [users, setUsers] = useState([]);
 
   const handleClearSearch = () => {

@@ -15,7 +15,7 @@ import { useSnackbar } from "../contexts/SnackbarContext";
 import ImageIcon from "@mui/icons-material/Image";
 import ImageCarousel from "../components/utilities/ImageCarousel";
 import { useNavigate } from "react-router-dom";
-import { useApiCall } from "../hooks/useApi";
+import { postService } from "../services/postService";
 
 const CreatePost = () => {
   const { user, refreshUser } = useUserContext();
@@ -25,7 +25,7 @@ const CreatePost = () => {
   const [caption, setCaption] = useState("");
   const [imageURLs, setImageURLs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { createPost, creatingPost } = useApiCall();
+  const { createPost, creatingPost } = postService();
 
   const handleImageChange = (event) => {
     const selectedFiles = event.target.files;

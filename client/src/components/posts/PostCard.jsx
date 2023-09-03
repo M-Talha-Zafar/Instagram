@@ -23,7 +23,8 @@ import { useSnackbar } from "../../contexts/SnackbarContext";
 import { useUserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import CommentCard from "../comments/CommentCard";
-import { useApiCall } from "../../hooks/useApi";
+import { postService } from "../../services/postService";
+import { commentService } from "../../services/commentService";
 
 const PostCard = ({
   post,
@@ -53,13 +54,16 @@ const PostCard = ({
     unlikePost,
     updatePost,
     updatingPost,
+  } = postService();
+
+  const {
     deleteComment,
     deletingComment,
     updateComment,
     updatingComment,
     createComment,
     creatingComment,
-  } = useApiCall();
+  } = commentService();
 
   const handleDeletePost = async () => {
     try {

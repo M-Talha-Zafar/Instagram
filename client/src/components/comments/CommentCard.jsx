@@ -11,7 +11,6 @@ import DropdownMenu from "../utilities/DropdownMenu";
 import { useUserContext } from "../../contexts/UserContext";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import ConfirmationModal from "../utilities/ConfirmationModal";
-import { useApiCall } from "../../hooks/useApi";
 
 const CommentCard = ({
   comment,

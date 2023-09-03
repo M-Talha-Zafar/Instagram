@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import ViewStoryModal from "./ViewStoryModal";
 import CreateStoryModal from "./CreateStoryModal";
-import { useApiCall } from "../../hooks/useApi";
+import { userService } from "../../services/userService";
 
 const StoriesBar = ({ user: currentUser }) => {
   const [users, setUsers] = useState([]);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [storyUser, setStoryUser] = useState({});
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const { fetchStoryUsers, loadingStoryUsers } = useApiCall();
+  const { fetchStoryUsers, loadingStoryUsers } = userService();
   const navigate = useNavigate();
 
   const loadStoryUsers = useCallback(async () => {

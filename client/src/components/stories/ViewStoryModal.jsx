@@ -11,7 +11,7 @@ import { useUserContext } from "../../contexts/UserContext";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import DropdownMenu from "../utilities/DropdownMenu";
 import ConfirmationModal from "../utilities/ConfirmationModal";
-import { useApiCall } from "../../hooks/useApi";
+import { storyService } from "../../services/storyService";
 
 const style = {
   position: "absolute",
@@ -31,7 +31,7 @@ const ViewStoryModal = ({ open, onClose, user, update }) => {
   const { showSnackbar } = useSnackbar();
   const { user: currentUser } = useUserContext();
   const { getStories, loadingStories, deleteStory, deletingStory } =
-    useApiCall();
+    storyService();
   const isOwner = user && currentUser && user._id === currentUser._id;
 
   useEffect(() => {

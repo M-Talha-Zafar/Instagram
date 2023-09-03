@@ -4,12 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import PostCard from "../components/posts/PostCard";
 import { useUserContext } from "../contexts/UserContext";
 import StoriesBar from "../components/stories/StoriesBar";
-import { useApiCall } from "../hooks/useApi";
+import { postService } from "../services/postService";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const { user } = useUserContext();
-  const { fetchFeed, loadingFeed } = useApiCall();
+  const { fetchFeed, loadingFeed } = postService();
   const navigate = useNavigate();
 
   const fetchPosts = async () => {

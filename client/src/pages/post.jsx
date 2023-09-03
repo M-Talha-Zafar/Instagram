@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, IconButton, Box, CircularProgress } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import { Box, CircularProgress } from "@mui/material";
 import { useUserContext } from "../contexts/UserContext";
 import PostCard from "../components/posts/PostCard";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import { useApiCall } from "../hooks/useApi";
+import { postService } from "../services/postService";
 
 const Post = () => {
   const { id } = useParams();
   const { user } = useUserContext();
   const [post, setPost] = useState(null);
-  const { getPostById, loadingPost } = useApiCall();
+  const { getPostById, loadingPost } = postService();
 
   const isOwner = user && post && user._id === post.user._id;
 

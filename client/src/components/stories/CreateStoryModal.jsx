@@ -6,7 +6,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import { useApiCall } from "../../hooks/useApi";
+import { storyService } from "../../services/storyService";
 import { useState, memo } from "react";
 import { upload } from "../../utilities/uploadImage";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -27,7 +27,7 @@ const style = {
 const CreateStoryModal = ({ open, onClose, user, update }) => {
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState([]);
-  const { createStory, creatingStory } = useApiCall();
+  const { createStory, creatingStory } = storyService();
   const { showSnackbar } = useSnackbar();
 
   const handleImageChange = (event) => {

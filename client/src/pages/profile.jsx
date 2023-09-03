@@ -15,7 +15,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
-import { useApiCall } from "../hooks/useApi";
+import { userService } from "../services/userService";
 
 const Profile = () => {
   const { username } = useParams();
@@ -37,7 +37,7 @@ const Profile = () => {
     unfollowingUser,
     cancelRequest,
     cancellingRequest,
-  } = useApiCall();
+  } = userService();
 
   const isOwner = user && currentUser.username === username;
   const accessible = user && user.followers.includes(currentUser._id);

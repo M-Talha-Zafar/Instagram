@@ -18,13 +18,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import axios from "axios";
-import { useApiCall } from "../hooks/useApi";
+import { userService } from "../services/userService";
 
 const Requests = () => {
   const { user } = useUserContext();
   const [requests, setRequests] = useState([]);
   const { showSnackbar } = useSnackbar();
-  const { getRequests, loadingRequests } = useApiCall();
+  const { getRequests, loadingRequests } = userService();
   const navigate = useNavigate();
 
   useEffect(() => {

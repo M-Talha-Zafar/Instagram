@@ -1,5 +1,5 @@
 import { Box, Typography, Modal, CircularProgress } from "@mui/material";
-import { useApiCall } from "../../hooks/useApi";
+import { userService } from "../../services/userService";
 import { useEffect, useState } from "react";
 import UsersList from "./UsersList";
 
@@ -17,7 +17,7 @@ const style = {
 
 const UsersModal = ({ open, onClose, context, user }) => {
   const [users, setUsers] = useState([]);
-  const { getFollowOrFollowing, loadingFoF } = useApiCall();
+  const { getFollowOrFollowing, loadingFoF } = userService();
 
   useEffect(() => {
     const fetchUsers = async () => {
