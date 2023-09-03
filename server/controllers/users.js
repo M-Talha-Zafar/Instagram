@@ -1,183 +1,174 @@
-const User = require("../models/user");
-const upload = require("../utilities/upload-image");
+const UserService = require("../services/users");
 
 const UserController = {
-  getAll: async () => {
+  getAll: async (req, res) => {
     try {
-      return User.find();
+      const users = await UserService.getAll();
+      res.send(users);
     } catch (ex) {
-      throw new Error("An error occurred while fetching users");
+      res.status(500).send({ error: ex.message });
     }
   },
 
-  getById: async (id) => {
+  getStoryPictures: async (req, res) => {
+    const userId = req.params.id;
     try {
-      const user = await User.findById(id).populate("posts");
-      if (!user) throw new Error();
-      return user;
-    } catch (ex) {
-      throw new Error("An error occurred while fetching the user");
+      const posts = await UserService.getStoryPictures(userId);
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  getStoryPictures: async (userId) => {
-    const user = await User.findById(userId).populate(
-      "following",
-      "username profilePicture stories"
-    );
-
-    const currentUserInfo = {
-      _id: user._id,
-      username: user.username,
-      profilePicture: user.profilePicture,
-      stories: user.stories,
-    };
-
-    return [currentUserInfo, ...user.following];
-  },
-
-  getByUsername: async (username) => {
+  getFollowers: async (req, res) => {
+    const userId = req.params.id;
     try {
-      const user = await User.findOne({ username: username }).populate("posts");
-      if (!user) throw new Error();
-      return user;
+      const users = await UserService.getFollowers(userId);
+      res.send(users);
     } catch (ex) {
-      throw new Error("An error occurred while fetching the user");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  create: async (userData) => {
+  getFollowing: async (req, res) => {
+    const userId = req.params.id;
     try {
-      return User.create(userData);
+      const users = await UserService.getFollowing(userId);
+      res.send(users);
     } catch (ex) {
-      throw new Error("An error occurred while creating the user");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  updateById: async (id, updatedData, image) => {
+  getRequests: async (req, res) => {
+    const userId = req.params.id;
     try {
-      const url = await upload(image);
-      updatedData.profilePicture = url;
-      return User.findByIdAndUpdate(id, updatedData, { new: true });
+      const users = await UserService.getRequests(userId);
+      res.send(users);
     } catch (ex) {
-      throw new Error("An error occurred while updating the user");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  deleteById: async (id) => {
+  sendFollowRequest: async (req, res) => {
+    const { senderId, recipientId } = req.body;
     try {
-      return User.findByIdAndDelete(id);
+      const user = await UserService.sendFollowRequest(senderId, recipientId);
+      res.send(user);
     } catch (ex) {
-      throw new Error("An error occurred while deleting the user");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  searchUser: async (searchTerm) => {
-    const regex = new RegExp(searchTerm, "i");
-    const searchResults = await User.find({ username: regex });
-    return searchResults;
-  },
-
-  getFollowers: async (userId) => {
-    const user = await User.findById(userId).populate(
-      "followers",
-      "username profilePicture"
-    );
-    if (!user) throw new Error("User not found");
-    return user.followers;
-  },
-
-  getFollowing: async (userId) => {
-    const user = await User.findById(userId).populate(
-      "following",
-      "username profilePicture"
-    );
-    if (!user) throw new Error("User not found");
-
-    return user.following;
-  },
-
-  getRequests: async (userId) => {
-    const user = await User.findById(userId).populate("requests");
-    if (!user) throw new Error("User not found");
-
-    return user.requests;
-  },
-
-  sendFollowRequest: async (senderId, recipientId) => {
-    const recipient = await User.findByIdAndUpdate(
-      recipientId,
-      { $addToSet: { requests: senderId } },
-      { new: true }
-    );
-
-    return recipient;
-  },
-
-  addFollower: async (senderId, recipientId) => {
-    const sender = await User.findById(senderId);
-    const recipient = await User.findById(recipientId).populate("posts");
-
-    if (!sender || !recipient) {
-      throw new Error("Sender or recipient not found");
+  addFollower: async (req, res) => {
+    const { senderId, recipientId } = req.body;
+    try {
+      const user = await UserService.addFollower(senderId, recipientId);
+      res.send(user);
+    } catch (ex) {
+      res.status(500).json({ message: "An error occurred." });
     }
+  },
 
-    if (!recipient.followers.includes(senderId)) {
-      recipient.followers.push(senderId);
-      await recipient.save();
+  acceptFollowRequest: async (req, res) => {
+    const { userId, friendId } = req.body;
+    try {
+      const user = await UserService.acceptFollowRequest(userId, friendId);
+      res.send(user);
+    } catch (ex) {
+      res.status(500).json({ message: "An error occurred." });
     }
+  },
 
-    if (!sender.following.includes(recipientId)) {
-      sender.following.push(recipientId);
-      await sender.save();
+  deleteFollowRequest: async (req, res) => {
+    const { userId, unfollowId } = req.body;
+    try {
+      const user = await UserService.deleteFollowRequest(userId, unfollowId);
+      res.send(user);
+    } catch (ex) {
+      res.status(500).json({ message: "An error occurred." });
     }
-
-    return recipient;
   },
 
-  acceptFollowRequest: async (userId, friendId) => {
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        $pull: { requests: friendId },
-        $addToSet: { followers: friendId },
-      },
-      { new: true }
-    );
-
-    await User.findByIdAndUpdate(
-      friendId,
-      { $addToSet: { following: userId } },
-      { new: true }
-    );
-
-    return user;
+  unfollowUser: async (req, res) => {
+    const { userId, unfollowId } = req.body;
+    try {
+      const user = await UserService.unfollowUser(userId, unfollowId);
+      res.send(user);
+    } catch (ex) {
+      res.status(500).json({ message: "An error occurred." });
+    }
   },
 
-  unfollowUser: async (userId, unfollowId) => {
-    await User.findByIdAndUpdate(
-      userId,
-      { $pull: { following: unfollowId } },
-      { new: true }
-    );
-
-    const user = await User.findByIdAndUpdate(
-      unfollowId,
-      { $pull: { followers: userId } },
-      { new: true }
-    ).populate("posts");
-
-    return user;
+  searchUser: async (req, res) => {
+    try {
+      const searchQuery = req.query.searchQuery;
+      if (!searchQuery || searchQuery.trim() === "") {
+        return res.status(500).json({ error: "Invalid search term" });
+      }
+      const users = await UserService.searchUser(searchQuery);
+      res.send(users);
+    } catch (error) {
+      res.status(500).json({
+        error: "Failed to search for users",
+        errorMessage: error.message,
+      });
+    }
   },
 
-  deleteFollowRequest: async (userId, unfollowId) => {
-    const updatedUser = await User.findByIdAndUpdate(
-      unfollowId,
-      { $pull: { requests: userId } },
-      { new: true }
-    );
+  getById: async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const user = await UserService.getById(userId);
+      res.send(user);
+    } catch (ex) {
+      res.status(500).send({ error: ex.message });
+    }
+  },
 
-    return updatedUser;
+  getByUsername: async (req, res) => {
+    const username = req.params.username;
+    try {
+      const user = await UserService.getByUsername(username);
+      res.send(user);
+    } catch (ex) {
+      res.status(500).send({ error: ex.message });
+    }
+  },
+
+  create: async (req, res) => {
+    const userData = req.body;
+    try {
+      const newUser = await UserService.create(userData);
+      res.send(newUser);
+    } catch (ex) {
+      res.status(500).send({ error: ex.message });
+    }
+  },
+
+  updateById: async (req, res) => {
+    const userId = req.params.id;
+    const { editedUser, image } = req.body;
+    try {
+      const updatedUser = await UserService.updateById(
+        userId,
+        editedUser,
+        image
+      );
+      res.send(updatedUser);
+    } catch (ex) {
+      res.status(500).send({ error: ex.message });
+    }
+  },
+
+  deleteById: async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const deletedUser = await UserService.deleteById(userId);
+      res.send(deletedUser);
+    } catch (ex) {
+      res.status(500).send({ error: ex.message });
+    }
   },
 };
 

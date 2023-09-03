@@ -1,148 +1,86 @@
-const Post = require("../models/post");
-const User = require("../models/user");
-const Comment = require("../models/comment");
-const mongoose = require("mongoose");
-const upload = require("../utilities/upload-image");
+const PostService = require("../services/posts");
 
-const PostController = {
-  getAll: async () => {
+const PostsController = {
+  getAll: async (req, res) => {
     try {
-      return Post.find()
-        .sort({ createdAt: -1 })
-        .populate("user")
-        .populate("comments");
+      const posts = await PostService.getAll();
+      res.json(posts);
     } catch (error) {
-      throw new Error("An error occurred while fetching posts");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  getPostsForUser: async (userId) => {
+  getPostsForUser: async (req, res) => {
+    const userId = req.params.id;
     try {
-      const posts = await Post.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "_id",
-            as: "user",
-          },
-        },
-        {
-          $unwind: "$user",
-        },
-        {
-          $match: {
-            $or: [
-              { "user.isPrivate": false },
-              { "user.followers": new mongoose.Types.ObjectId(userId) },
-              { "user._id": new mongoose.Types.ObjectId(userId) },
-            ],
-          },
-        },
-        {
-          $sort: { createdAt: -1 },
-        },
-      ]);
-
-      return posts;
+      const posts = await PostService.getPostsForUser(userId);
+      res.json(posts);
     } catch (error) {
-      throw new Error("An error occurred while fetching posts");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 
-  getById: async (postId) => {
+  getById: async (req, res) => {
+    const postId = req.params.id;
     try {
-      return Post.findById(postId)
-        .populate("user")
-        .populate({
-          path: "comments",
-          populate: {
-            path: "user",
-            model: "User",
-            select: "username profilePicture",
-          },
-        });
+      const post = await PostService.getById(postId);
+      res.json(post);
     } catch (error) {
-      throw new Error("An error occurred while fetching the post");
+      res.status(500).json({ message: error.message });
     }
   },
 
-  create: async (postData) => {
+  create: async (req, res) => {
+    const postData = req.body;
     try {
-      const uploadPromises = postData.images.map(async (url) => {
-        const uploadedUrl = await upload(url);
-        return uploadedUrl;
-      });
-
-      const uploadedImages = await Promise.all(uploadPromises);
-
-      const newPost = new Post({
-        images: uploadedImages,
-        caption: postData.caption,
-        user: postData.userId,
-      });
-
-      await newPost.save();
-
-      await User.findByIdAndUpdate(postData.userId, {
-        $push: { posts: newPost._id },
-      });
-
-      return newPost;
+      const newPost = await PostService.create(postData);
+      res.status(201).json(newPost);
     } catch (error) {
       console.log(error.message);
-      throw new Error("An error occurred while creating the post");
+      res.status(500).json({ message: "Failed to create post." });
     }
   },
 
-  updateById: async (postId, updatedData) => {
+  like: async (req, res) => {
+    const { userId, postId } = req.body;
     try {
-      return Post.findByIdAndUpdate(postId, updatedData, { new: true });
+      const post = await PostService.like(userId, postId);
+      res.status(200).json({ message: "Post liked", post });
     } catch (error) {
-      throw new Error("An error occurred while updating the post");
+      res.status(500).json({ message: "Failed to like post." });
     }
   },
 
-  deleteById: async (postId) => {
+  unlike: async (req, res) => {
+    const { userId, postId } = req.body;
     try {
-      const deletedPost = await Post.findByIdAndDelete(postId);
-      if (!deletedPost) {
-        throw new Error("Post not found");
-      }
-
-      const commentIds = deletedPost.comments.map((comment) => comment._id);
-
-      await Comment.deleteMany({ _id: { $in: commentIds } });
-
-      await User.findByIdAndUpdate(
-        deletedPost.user,
-        { $pull: { posts: postId } },
-        { new: true }
-      );
-
-      return deletedPost;
+      const post = await PostService.unlike(userId, postId);
+      res.status(200).json({ message: "Post unliked", post });
     } catch (error) {
-      throw new Error("An error occurred while deleting the post");
+      res.status(500).json({ message: "Failed to unlike post." });
     }
   },
 
-  like: async (userId, postId) => {
-    const post = await Post.findByIdAndUpdate(
-      postId,
-      { $addToSet: { likedBy: userId } }, // Using $addToSet to avoid duplicate likes
-      { new: true }
-    );
-    return post;
+  updateById: async (req, res) => {
+    const postId = req.params.id;
+    const updatedData = req.body;
+    try {
+      const updatedPost = await PostService.updateById(postId, updatedData);
+      res.json(updatedPost);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update post." });
+    }
   },
 
-  unlike: async (userId, postId) => {
-    const post = await Post.findByIdAndUpdate(
-      postId,
-      { $pull: { likedBy: userId } },
-      { new: true }
-    );
-    return post;
+  deleteById: async (req, res) => {
+    const postId = req.params.id;
+    try {
+      await PostService.deleteById(postId);
+      res.json({ message: "Post deleted." });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete post." });
+    }
   },
 };
 
-module.exports = PostController;
+module.exports = PostsController;

@@ -1,65 +1,34 @@
-const storyFlushQueue = require("../jobs/story");
-const { TimeIntervals } = require("../constants/constants");
-const Story = require("../models/story");
-const User = require("../models/user");
-const upload = require("../utilities/upload-image");
+const StoryService = require("../services/stories");
 
 const StoryController = {
-  create: async (userId, image) => {
+  create: async (req, res) => {
+    const { userId, image } = req.body;
     try {
-      const url = await upload(image);
-
-      const newStory = new Story({
-        user: userId,
-        image: url,
-      });
-
-      await newStory.save();
-
-      await User.findByIdAndUpdate(userId, {
-        $push: { stories: newStory._id },
-      }).lean();
-
-      await storyFlushQueue.add(
-        "flush-story",
-        { storyId: newStory._id },
-        { delay: TimeIntervals.ONE_DAY }
-      );
-
-      return newStory;
+      const newStory = await StoryService.create(userId, image);
+      res.status(201).json(newStory);
     } catch (error) {
-      console.log(error);
-      throw new Error("An error occurred while creating the story");
+      res.status(500).json({ message: "Failed to create story." });
     }
   },
 
-  deleteById: async (storyId) => {
+  deleteById: async (req, res) => {
+    const storyId = req.params.id;
     try {
-      const story = await Story.findOne({ _id: storyId });
-
-      if (!story) {
-        throw new Error("Story not found");
-      }
-
-      await User.findByIdAndUpdate(story.user._id, {
-        $pull: { stories: storyId },
-      });
-
-      const deletedStory = await Story.findByIdAndDelete(storyId);
-
-      return deletedStory;
+      const deletedStory = await StoryService.deleteById(storyId);
+      res.status(201).json(deletedStory);
     } catch (error) {
       console.log(error);
-      throw new Error("An error occurred while deleting the story");
+      res.status(500).json({ message: "Failed to delete story." });
     }
   },
 
-  getAllByUserId: async (userId) => {
+  getAllByUserId: async (req, res) => {
+    const userId = req.params.userId;
     try {
-      const stories = await Story.find({ user: userId }).populate("user");
-      return stories;
+      const stories = await StoryService.getAllByUserId(userId);
+      res.json(stories);
     } catch (error) {
-      throw new Error("An error occurred while fetching stories");
+      res.status(500).json({ message: "An error occurred." });
     }
   },
 };

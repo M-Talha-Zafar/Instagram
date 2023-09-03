@@ -1,60 +1,41 @@
-const Comment = require("../models/comment");
-const Post = require("../models/post");
+const CommentService = require("../services/comments");
 
 const CommentController = {
-  getById: async (commentId) => {
+  createComment: async (req, res) => {
+    const postId = req.params.postId;
+    const commentData = req.body;
     try {
-      return Comment.findById(commentId);
-    } catch (error) {
-      throw new Error("An error occurred while fetching the comment");
-    }
-  },
-
-  createComment: async (postId, commentData) => {
-    try {
-      const post = await Post.findById(postId);
-      if (!post) throw new Error("Post not found");
-
-      const newComment = new Comment({
-        post: postId,
-        text: commentData.text,
-        user: commentData.userId,
-      });
-
-      post.comments.push(newComment._id);
-      await post.save();
-
-      await newComment.save();
-      return newComment;
-    } catch (error) {
-      throw new Error("An error occurred while creating the comment");
-    }
-  },
-
-  updateById: async (commentId, updatedData) => {
-    try {
-      return Comment.findByIdAndUpdate(commentId, updatedData, { new: true });
-    } catch (error) {
-      throw new Error("An error occurred while updating the comment");
-    }
-  },
-
-  deleteById: async (commentId) => {
-    try {
-      const deletedComment = await Comment.findByIdAndDelete(commentId);
-      if (!deletedComment) {
-        throw new Error("Comment not found");
-      }
-
-      await Post.findByIdAndUpdate(
-        deletedComment.post,
-        { $pull: { comments: commentId } },
-        { new: true }
+      const newComment = await CommentService.createComment(
+        postId,
+        commentData
       );
-
-      return deletedComment;
+      res.status(201).json(newComment);
     } catch (error) {
-      throw new Error("An error occurred while deleting the comment");
+      res.status(500).json({ message: "Failed to create comment." });
+    }
+  },
+
+  updateById: async (req, res) => {
+    const commentId = req.params.id;
+    const updatedData = req.body;
+    try {
+      const updatedComment = await CommentService.updateById(
+        commentId,
+        updatedData
+      );
+      res.json(updatedComment);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update comment." });
+    }
+  },
+
+  deleteById: async (req, res) => {
+    const commentId = req.params.id;
+    try {
+      const deletedComment = await CommentService.deleteById(commentId);
+      res.json(deletedComment);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete comment." });
     }
   },
 };
