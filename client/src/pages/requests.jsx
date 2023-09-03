@@ -22,9 +22,11 @@ import { userService } from "../services/userService";
 
 const Requests = () => {
   const { user } = useUserContext();
-  const [requests, setRequests] = useState([]);
   const { showSnackbar } = useSnackbar();
   const { getRequests, loadingRequests } = userService();
+
+  const [requests, setRequests] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {

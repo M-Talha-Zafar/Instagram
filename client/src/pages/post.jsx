@@ -8,8 +8,9 @@ import { postService } from "../services/postService";
 const Post = () => {
   const { id } = useParams();
   const { user } = useUserContext();
-  const [post, setPost] = useState(null);
   const { getPostById, loadingPost } = postService();
+
+  const [post, setPost] = useState(null);
 
   const isOwner = user && post && user._id === post.user._id;
 

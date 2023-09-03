@@ -34,19 +34,6 @@ const PostCard = ({
   displayCaption,
   displayComments,
 }) => {
-  const [editedPost, setEditedPost] = useState(post);
-  const { user, refreshUser } = useUserContext();
-  const [open, setOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [editedCaption, setEditedCaption] = useState(editedPost.caption);
-  const { showSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-
-  const [commentText, setCommentText] = useState("");
-
-  const [liked, setLiked] = useState(editedPost.likedBy.includes(user._id));
-  const [likeCount, setLikeCount] = useState(editedPost.likedBy.length);
-
   const {
     deletePost,
     deletingPost,
@@ -64,6 +51,19 @@ const PostCard = ({
     createComment,
     creatingComment,
   } = commentService();
+
+  const { showSnackbar } = useSnackbar();
+  const { user, refreshUser } = useUserContext();
+
+  const [editedPost, setEditedPost] = useState(post);
+  const [open, setOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editedCaption, setEditedCaption] = useState(editedPost.caption);
+  const [commentText, setCommentText] = useState("");
+  const [liked, setLiked] = useState(editedPost.likedBy.includes(user._id));
+  const [likeCount, setLikeCount] = useState(editedPost.likedBy.length);
+
+  const navigate = useNavigate();
 
   const handleDeletePost = async () => {
     try {

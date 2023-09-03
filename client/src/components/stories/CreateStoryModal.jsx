@@ -27,9 +27,10 @@ const style = {
 };
 
 const CreateStoryModal = ({ open, onClose, user, update }) => {
-  const [image, setImage] = useState(null);
   const { createStory, creatingStory } = storyService();
   const { showSnackbar } = useSnackbar();
+
+  const [image, setImage] = useState(null);
 
   const handleImageChange = (event) => {
     const selectedFile = event.target.files[0];

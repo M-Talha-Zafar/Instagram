@@ -21,12 +21,13 @@ const EditProfile = () => {
   const { user, refreshUser } = useUserContext();
   const { showSnackbar } = useSnackbar();
   const { updateUser, updatingUser } = userService();
-  const navigate = useNavigate();
 
   const [editedUser, setEditedUser] = useState(user);
   const [selectedImage, setSelectedImage] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [privacy, setPrivacy] = useState(user.isPrivate ? "private" : "public");
+
+  const navigate = useNavigate();
 
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);

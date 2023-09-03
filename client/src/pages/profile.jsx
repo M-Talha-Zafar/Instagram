@@ -20,10 +20,12 @@ import { userService } from "../services/userService";
 const Profile = () => {
   const { username } = useParams();
   const { showSnackbar } = useSnackbar();
-  const [user, setUser] = useState(null);
   const { user: currentUser } = useUserContext();
+
+  const [user, setUser] = useState(null);
   const [context, setContext] = useState();
   const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const {

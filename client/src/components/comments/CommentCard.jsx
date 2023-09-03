@@ -19,11 +19,12 @@ const CommentCard = ({
   deletingComment,
   updatingComment,
 }) => {
+  const { showSnackbar } = useSnackbar();
+  const { user } = useUserContext();
+
   const [editMode, setEditMode] = useState(false);
   const [editedBody, setEditedBody] = useState(comment.text);
   const [open, setOpen] = useState(false);
-  const { showSnackbar } = useSnackbar();
-  const { user } = useUserContext();
 
   const isOwner = user && comment && user._id === comment.user._id;
 

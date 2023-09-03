@@ -24,14 +24,16 @@ const style = {
 };
 
 const ViewStoryModal = ({ open, onClose, user, update }) => {
-  const [images, setImages] = useState([]);
-  const [stories, setStories] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const { showSnackbar } = useSnackbar();
   const { user: currentUser } = useUserContext();
   const { getStories, loadingStories, deleteStory, deletingStory } =
     storyService();
+
+  const [images, setImages] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const isOwner = user && currentUser && user._id === currentUser._id;
 
   useEffect(() => {

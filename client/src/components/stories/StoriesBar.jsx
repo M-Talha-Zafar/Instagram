@@ -7,11 +7,13 @@ import CreateStoryModal from "./CreateStoryModal";
 import { userService } from "../../services/userService";
 
 const StoriesBar = ({ user: currentUser }) => {
+  const { fetchStoryUsers, loadingStoryUsers } = userService();
+
   const [users, setUsers] = useState([]);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [storyUser, setStoryUser] = useState({});
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const { fetchStoryUsers, loadingStoryUsers } = userService();
+
   const navigate = useNavigate();
 
   const loadStoryUsers = useCallback(async () => {

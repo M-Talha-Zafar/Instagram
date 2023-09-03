@@ -23,12 +23,13 @@ const StyledIconButton = styled(IconButton)({
 });
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-  const isXsOrSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
-
   const { showSnackbar } = useSnackbar();
   const { user } = useUserContext();
   const { logout } = useAuth();
+
+  const navigate = useNavigate();
+
+  const isXsOrSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const handleLogout = async () => {
     try {

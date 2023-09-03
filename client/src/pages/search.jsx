@@ -14,8 +14,9 @@ import UsersList from "../components/users/UsersList";
 import { userService } from "../services/userService";
 
 const Search = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const { searchUsers, searching } = userService();
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
 
   const handleClearSearch = () => {

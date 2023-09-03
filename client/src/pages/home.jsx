@@ -7,9 +7,11 @@ import StoriesBar from "../components/stories/StoriesBar";
 import { postService } from "../services/postService";
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
   const { user } = useUserContext();
   const { fetchFeed, loadingFeed } = postService();
+
+  const [posts, setPosts] = useState([]);
+
   const navigate = useNavigate();
 
   const fetchPosts = async () => {

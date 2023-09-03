@@ -32,8 +32,10 @@ const errorStyles = {
 
 const Signup = () => {
   const { showSnackbar } = useSnackbar();
-  const [signingUp, setSigningUp] = useState(false);
   const { signup } = useAuth();
+
+  const [signingUp, setSigningUp] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSignup = async (values) => {

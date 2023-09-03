@@ -16,8 +16,9 @@ const style = {
 };
 
 const UsersModal = ({ open, onClose, context, user }) => {
-  const [users, setUsers] = useState([]);
   const { getFollowOrFollowing, loadingFoF } = userService();
+
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
