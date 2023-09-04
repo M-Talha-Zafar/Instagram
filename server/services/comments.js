@@ -6,7 +6,6 @@ const CommentService = {
   createComment: async (postId, commentData) => {
     const session = await mongoose.startSession();
     session.startTransaction();
-    console.log("Here");
 
     try {
       const post = await Post.findById(postId).session(session);

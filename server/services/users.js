@@ -7,11 +7,20 @@ const UserService = {
 
   getById: (id) => User.findById(id).populate("posts"),
 
-  getStoryPictures: (userId) => {
-    return User.findById(userId).populate(
+  getStoryPictures: async (userId) => {
+    const user = await User.findById(userId).populate(
       "following",
       "username profilePicture stories"
     );
+
+    const currentUserInfo = {
+      _id: user._id,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      stories: user.stories,
+    };
+
+    return [currentUserInfo, ...user.following];
   },
 
   getByUsername: (username) =>
@@ -24,8 +33,10 @@ const UserService = {
     session.startTransaction();
 
     try {
-      const url = await upload(image);
-      updatedData.profilePicture = url;
+      if (image) {
+        const url = await upload(image);
+        updatedData.profilePicture = url;
+      }
       const updatedUser = await User.findByIdAndUpdate(id, updatedData, {
         new: true,
         session,
@@ -50,22 +61,27 @@ const UserService = {
     return User.find({ username: regex });
   },
 
-  getFollowers: (userId) => {
-    return User.findById(userId).populate(
+  getFollowers: async (userId) => {
+    const user = await User.findById(userId).populate(
       "followers",
       "username profilePicture"
     );
+
+    return user.followers;
   },
 
-  getFollowing: (userId) => {
-    return User.findById(userId).populate(
+  getFollowing: async (userId) => {
+    const user = await User.findById(userId).populate(
       "following",
       "username profilePicture"
     );
+
+    return user.following;
   },
 
-  getRequests: (userId) => {
-    return User.findById(userId).populate("requests");
+  getRequests: async (userId) => {
+    const user = await User.findById(userId).populate("requests");
+    return user.requests;
   },
 
   sendFollowRequest: async (senderId, recipientId) => {
@@ -77,6 +93,7 @@ const UserService = {
 
     return recipient;
   },
+
   addFollower: async (senderId, recipientId) => {
     const session = await mongoose.startSession();
     session.startTransaction();

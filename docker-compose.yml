@@ -17,13 +17,8 @@ services:
     container_name: node-container
     restart: always
     ports:
-      - "3000:3000" # Map container's port 4000 to host's port 4000
+      - "3000:3000"
     volumes:
       - ./server:/app # Mount your local server directory into the container
     environment:
       - NODE_ENV=development # Set environment variables if needed
-
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
