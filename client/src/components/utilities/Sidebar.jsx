@@ -12,6 +12,13 @@ import { styled } from "@mui/system";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserContext } from "../../contexts/UserContext";
+import {
+  ROUTE_CREATE_POST,
+  ROUTE_HOME,
+  ROUTE_LOGIN,
+  ROUTE_REQUESTS,
+  ROUTE_SEARCH,
+} from "../../utilities/routeNames";
 
 const StyledIconButton = styled(IconButton)({
   marginBottom: "20px",
@@ -34,7 +41,7 @@ const Sidebar = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/login");
+      navigate(ROUTE_LOGIN);
       showSnackbar("Logout successful");
     } catch (ex) {
       console.error("Error logging out: ", error);
@@ -82,7 +89,7 @@ const Sidebar = () => {
           width: "100%",
         }}
       >
-        <StyledIconButton onClick={() => navigate("/")}>
+        <StyledIconButton onClick={() => navigate(ROUTE_HOME)}>
           <HomeIcon fontSize="large" />
           <Typography
             ml={2}
@@ -92,7 +99,7 @@ const Sidebar = () => {
             Home
           </Typography>
         </StyledIconButton>
-        <StyledIconButton onClick={() => navigate("/search")}>
+        <StyledIconButton onClick={() => navigate(ROUTE_SEARCH)}>
           <SearchIcon fontSize="large" />
           <Typography
             ml={2}
@@ -102,7 +109,7 @@ const Sidebar = () => {
             Search
           </Typography>
         </StyledIconButton>
-        <StyledIconButton onClick={() => navigate("/create")}>
+        <StyledIconButton onClick={() => navigate(ROUTE_CREATE_POST)}>
           <AddIcon fontSize="large" />
           <Typography
             ml={2}
@@ -122,7 +129,7 @@ const Sidebar = () => {
             Profile
           </Typography>
         </StyledIconButton>
-        <StyledIconButton onClick={() => navigate("/requests")}>
+        <StyledIconButton onClick={() => navigate(ROUTE_REQUESTS)}>
           <FavoriteBorderIcon fontSize="large" />
           <Typography
             ml={2}

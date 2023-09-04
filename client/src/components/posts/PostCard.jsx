@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import CommentCard from "../comments/CommentCard";
 import { postService } from "../../services/postService";
 import { commentService } from "../../services/commentService";
+import { ROUTE_HOME } from "../../utilities/routeNames";
 
 const PostCard = ({
   post,
@@ -70,7 +71,7 @@ const PostCard = ({
       await deletePost(editedPost._id);
       showSnackbar("Post deleted");
       refreshUser();
-      navigate("/");
+      navigate(ROUTE_HOME);
     } catch (error) {
       console.error(error);
     }

@@ -15,6 +15,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ROUTE_HOME } from "../utilities/routeNames";
 
 const validationSchema = Yup.object().shape({
   usernameOrEmail: Yup.string().required("Username or Email is required"),
@@ -39,7 +40,7 @@ const Login = () => {
     try {
       setLoggingIn(true);
       await login(values);
-      navigate("/");
+      navigate(ROUTE_HOME);
       showSnackbar("Login successful");
     } catch (ex) {
       console.error(ex);

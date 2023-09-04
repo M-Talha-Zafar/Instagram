@@ -1,0 +1,9 @@
+export const ROUTE_HOME = "/";
+export const ROUTE_LOGIN = "/login";
+export const ROUTE_SIGNUP = "/signup";
+export const ROUTE_EDIT_PROFILE = "/user/edit";
+export const ROUTE_CREATE_POST = "/create";
+export const ROUTE_POST = "/post/:id";
+export const ROUTE_SEARCH = "/search";
+export const ROUTE_REQUESTS = "/requests";
+export const ROUTE_PROFILE = "/:username/";

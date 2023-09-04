@@ -16,6 +16,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { userService } from "../services/userService";
+import { ROUTE_EDIT_PROFILE } from "../utilities/routeNames";
 
 const Profile = () => {
   const { username } = useParams();
@@ -136,7 +137,7 @@ const Profile = () => {
         {isOwner ? (
           <Button
             variant="filled"
-            onClick={() => navigate("/user/edit")}
+            onClick={() => navigate(ROUTE_EDIT_PROFILE)}
             sx={{
               ml: 2,
               background: "#F0F0F0",

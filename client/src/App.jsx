@@ -16,6 +16,17 @@ import CreatePost from "./pages/create-post";
 import Post from "./pages/post";
 import Search from "./pages/search";
 import Requests from "./pages/requests";
+import {
+  ROUTE_HOME,
+  ROUTE_LOGIN,
+  ROUTE_SIGNUP,
+  ROUTE_EDIT_PROFILE,
+  ROUTE_CREATE_POST,
+  ROUTE_POST,
+  ROUTE_SEARCH,
+  ROUTE_REQUESTS,
+  ROUTE_PROFILE,
+} from "./utilities/routeNames"; // Import the route names
 
 const App = () => {
   return (
@@ -27,7 +38,7 @@ const App = () => {
               <CssBaseline />
               <Routes>
                 <Route
-                  path="/"
+                  path={ROUTE_HOME}
                   element={
                     <ProtectedRoute>
                       <Home />
@@ -35,7 +46,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/login"
+                  path={ROUTE_LOGIN}
                   element={
                     <PublicRoute>
                       <Login />
@@ -43,7 +54,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/signup"
+                  path={ROUTE_SIGNUP}
                   element={
                     <PublicRoute>
                       <Signup />
@@ -51,7 +62,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/user/edit"
+                  path={ROUTE_EDIT_PROFILE}
                   element={
                     <ProtectedRoute>
                       <EditProfile />
@@ -59,7 +70,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/create"
+                  path={ROUTE_CREATE_POST}
                   element={
                     <ProtectedRoute>
                       <CreatePost />
@@ -67,7 +78,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/post/:id"
+                  path={ROUTE_POST}
                   element={
                     <ProtectedRoute>
                       <Post />
@@ -75,7 +86,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/search"
+                  path={ROUTE_SEARCH}
                   element={
                     <ProtectedRoute>
                       <Search />
@@ -83,7 +94,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/requests"
+                  path={ROUTE_REQUESTS}
                   element={
                     <ProtectedRoute>
                       <Requests />
@@ -91,7 +102,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/:username/"
+                  path={ROUTE_PROFILE}
                   element={
                     <ProtectedRoute>
                       <Profile />

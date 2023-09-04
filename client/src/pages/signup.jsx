@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from "react";
+import { ROUTE_HOME } from "../utilities/routeNames";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email"),
@@ -42,7 +43,7 @@ const Signup = () => {
     try {
       setSigningUp(true);
       await signup(values);
-      navigate("/");
+      navigate(ROUTE_HOME);
       showSnackbar("Sign up successful");
     } catch (ex) {
       console.error(ex);
