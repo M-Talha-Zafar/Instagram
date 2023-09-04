@@ -21,6 +21,7 @@ app.use(
     limit: "5mb",
   })
 );
+
 app.use(express.json());
 
 app.use(passport.initialize());

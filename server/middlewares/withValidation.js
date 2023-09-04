@@ -1,9 +1,9 @@
-const withValidations = (middlewareFunc) => async (req, res, next) => {
+const withValidations = (validatorMiddleware) => async (req, res, next) => {
   try {
-    await middlewareFunc(req, res, next);
+    await validatorMiddleware(req, res, next);
   } catch (ex) {
     console.log(ex);
-    next({ status: 500, message: ex.message });
+    next({ status: 400, message: ex.message });
   }
 };
 

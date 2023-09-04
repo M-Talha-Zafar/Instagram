@@ -9,6 +9,7 @@ services:
       - ./client:/app # Mount your local client directory into the container
     environment:
       - NODE_ENV=development # Set environment variables if needed
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend # Depends on the 'backend' service
 
@@ -22,3 +23,4 @@ services:
       - ./server:/app # Mount your local server directory into the container
     environment:
       - NODE_ENV=development # Set environment variables if needed
+      - CHOKIDAR_USEPOLLING=true

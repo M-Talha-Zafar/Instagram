@@ -53,7 +53,7 @@ const Requests = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       const updatedRequests = requests.filter((user) => user._id !== friendId);
       setRequests(updatedRequests);
@@ -75,7 +75,7 @@ const Requests = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       const updatedRequests = requests.filter((user) => user._id !== userId);
       setRequests(updatedRequests);
@@ -87,7 +87,7 @@ const Requests = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ p: 5 }}>
       {loadingRequests ? (
         <Box
           sx={{

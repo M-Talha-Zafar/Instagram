@@ -15,6 +15,8 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    // Navigate to /
+
     return Promise.reject(error);
   }
 );

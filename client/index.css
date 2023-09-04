@@ -1,7 +1,9 @@
 body,
 html,
 #root {
-  font-family: Century-Gothic, sans serif;
+  font-family:
+    Century-Gothic,
+    sans serif;
   height: 100%;
   margin: 0;
 }

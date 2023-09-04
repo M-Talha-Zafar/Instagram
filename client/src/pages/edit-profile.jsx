@@ -80,7 +80,7 @@ const EditProfile = () => {
             error.response.data?.error?.includes("E11000")
             ? "Username is already taken"
             : error,
-          "error"
+          "error",
         );
     }
   };

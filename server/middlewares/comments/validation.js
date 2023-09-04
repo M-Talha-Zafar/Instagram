@@ -3,7 +3,7 @@ const validateCommentData = (req, res, next) => {
   const { text, userId } = req.body;
 
   if (!postId) {
-    throw new Error("Comment text is required.");
+    throw new Error("Post id is required.");
   }
 
   if (!text) {

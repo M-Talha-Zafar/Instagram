@@ -100,7 +100,7 @@ const PostCard = ({
       await unlikePost(user._id, editedPost._id);
 
       const updatedLikedBy = editedPost.likedBy.filter(
-        (userId) => userId !== user._id
+        (userId) => userId !== user._id,
       );
 
       setEditedPost({ ...editedPost, likedBy: updatedLikedBy });
@@ -128,7 +128,7 @@ const PostCard = ({
       showSnackbar("Comment deleted");
 
       const updatedComments = editedPost.comments.filter(
-        (comment) => comment._id !== deletedComment._id
+        (comment) => comment._id !== deletedComment._id,
       );
 
       const updatedPost = { ...editedPost, comments: updatedComments };
@@ -145,7 +145,7 @@ const PostCard = ({
       showSnackbar("Comment updated");
 
       const updatedComments = editedPost.comments.map((c) =>
-        c._id === updatedComment._id ? { ...updatedComment, user: c.user } : c
+        c._id === updatedComment._id ? { ...updatedComment, user: c.user } : c,
       );
 
       const updatedPost = { ...editedPost, comments: updatedComments };

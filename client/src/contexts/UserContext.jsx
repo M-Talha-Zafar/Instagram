@@ -20,7 +20,7 @@ export const UserProvider = ({ children }) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setUser(response.data);
     } catch (error) {

@@ -20,7 +20,7 @@ export function userService() {
     try {
       setLoadingUser(true);
       const response = await axiosInstance.get(
-        `/users/by-username/${username}`
+        `/users/by-username/${username}`,
       );
       return response.data;
     } catch (error) {
@@ -74,7 +74,7 @@ export function userService() {
       setSendingRequest(true);
       const response = await axiosInstance.post(
         "/users/send-follow-request",
-        data
+        data,
       );
       return response.data;
     } catch (error) {
@@ -113,7 +113,7 @@ export function userService() {
       setCancellingRequest(true);
       const response = await axiosInstance.post(
         "/users/delete-follow-request",
-        data
+        data,
       );
       return response.data;
     } catch (error) {
@@ -139,7 +139,7 @@ export function userService() {
     try {
       setSearching(true);
       const response = await axiosInstance.get(
-        `/users/search?searchQuery=${searchQuery}`
+        `/users/search?searchQuery=${searchQuery}`,
       );
       return response.data;
     } catch (ex) {

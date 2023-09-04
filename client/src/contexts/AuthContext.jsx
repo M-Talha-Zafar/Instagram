@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (formData) => {
     const response = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/login`,
-      formData
+      formData,
     );
     const user = response.data;
     localStorage.setItem("user-token", user.token);
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (formData) => {
     const response = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/signup`,
-      formData
+      formData,
     );
 
     const user = response.data;
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         const user = response.data.user;
         if (user) setUser(user);

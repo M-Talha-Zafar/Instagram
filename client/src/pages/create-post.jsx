@@ -30,7 +30,7 @@ const CreatePost = () => {
   const handleImageChange = async (event) => {
     const selectedFiles = event.target.files;
     const imageFiles = Array.from(selectedFiles).filter((file) =>
-      file.type.startsWith("image/")
+      file.type.startsWith("image/"),
     );
 
     const base64Promises = imageFiles.map((file) => convertToBase64(file));
